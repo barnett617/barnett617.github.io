@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>关于负载均衡的理解小结 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2017-11-09 17:37">
+                    2017年11月9日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.2k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    12
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>均衡，存乎万物之间</p>
+<p>负载均衡（Load Balance）是指将请求<strong>均匀</strong>分摊到多个操作单元上执行，关键在于<strong>均匀</strong></p>
+<p>本来在学习过<strong>反向代理</strong>这个概念以后以为负载均衡就是反向代理在服务端将来自客户端短时大量的访问请求做分发，将其分配到多台提供相同服务的服务器上。<br>看了负载均衡以后发现其实<strong>负载均衡</strong>是一个很宏观的概念，上述的理解存在一定偏差。</p>
+<p>负载均衡旨在将特定的业务分担给多个服务器或网络设备，从而提高业务处理能力，保证业务的高可用性。</p>
+<a id="more"></a>
+<p>首先，上图</p>
+<p><img src="http://trigolds.com/load-balance.png" srcset="/img/loading.gif" alt=""></p>
+<blockquote>
+<p>A picture worth more than 1000 words</p>
+</blockquote>
+<p>（负载均衡用于缓解极大量的访问请求，所以下面的场景都基于同时来自客户端大量的访问请求）</p>
+<p>首先，我上面的理解在实际的负载均衡中其实表述的是【DNS层】（客户端-&gt;反向代理层）的负载均衡，这一层的负载均衡由DNS服务器实现。</p>
+<p>具体也就是当用户通过网站域名访问服务时，为了<strong>负载均衡</strong>，同一域名会配置多个解析IP，每当DNS解析请求来访问DNS服务器时，它会轮询这些IP，并保证每个IP的解析概率相同（均匀），这些IP就是nginx的外网IP。</p>
+<p>然后拿到某台nginx的IP也就结束了第一层的负载均衡</p>
+<p>接下来，来到【反向代理层—&gt;站点层】，这一层的负载均衡通过nginx的配置实现，策略有很多种：比如轮询、IP哈希、URL哈希、权重等</p>
+<ol>
+<li><p>请求轮询：类似DNS轮询，请求依次被路由到每一个web服务器</p>
+</li>
+<li><p>最少连接路由：将请求路由到连接数最少的web服务器</p>
+</li>
+<li><p>IP哈希：通过客户端IP的哈希值来路由到某一个web服务器（只要用户IP分布均匀，理论上路由的路径就是均匀的），这样同一个用户的请求会固定路由到固定的某一台web服务器上，该策略适合有状态服务，比如session（但不建议这么做，因为站点层无状态是分布式架构设计的基本原则之一，session最好放在数据层存储）</p>
+</li>
+</ol>
+<p>然后是【站点层-&gt;服务层】的负载均衡，该层通过服务连接池实现</p>
+<p>上游连接池与下游服务建立多个连接，每次请求会“随机”选取连接访问下游服务</p>
+<p>最后是【数据层】负载均衡</p>
+<p>当数据量十分庞大的时候，数据层（db，cache）可能会进行数据的水平切分，于是该层的负载均衡包含“数据均衡”和“请求均衡”两部分</p>
+<p>数据均衡指：水平切分后的每个服务（db，cache），彼此之间<strong>数据量</strong>均匀</p>
+<p>请求均衡指：水平切分后的每个服务（db，cache），彼此之间<strong>请求量</strong>均匀</p>
+<p>常见水平切分法如下：</p>
+<ol>
+<li>按照数据范围切分：每个数据服务存储一定范围内的数据</li>
+</ol>
+<p>DataServiceA：存储uid为[1-1kw)内的数据<br>DataServiceB：存储uid为[1kw-2kw)内的数据<br>.<br>.<br>.</p>
+<p>优点：</p>
+<ul>
+<li><p>规则简单，来自服务层的访问仅根据uid范围即可路由到对应的存储服务</p>
+</li>
+<li><p>数据均衡性良好（除最后一份，其他均为等分）</p>
+</li>
+<li><p>易拓展，可随时添加uid为2kw以后的数据服务</p>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>请求均衡不一定到位，例如新注册的用户会比老用户更活跃，即uid数值大的服务请求压力更大</li>
+</ul>
+<ol>
+<li>按照ID的哈希值切分：每个数据服务存储uid哈希后的<strong>部分数据</strong></li>
+</ol>
+<p>DataServiceA：存储uid哈希后的部分数据<br>DataServiceB：存储uid哈希后的另一部分数据<br>.<br>.<br>.</p>
+<p>优点：</p>
+<ul>
+<li><p>规则简单，来自服务层的访问仅根据uid进行哈希计算即可路由到对应的存储服务</p>
+</li>
+<li><p>数据均衡性良好</p>
+</li>
+<li><p>请求均衡性良好</p>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不易拓展，拓展一个数据服务时，哈希方法改变，可能需要进行数据迁移</li>
+</ul>
+<p>总结：</p>
+<p>各层负载均衡实现方式</p>
+<p>【客户端-&gt;反向代理】：DNS轮询</p>
+<p>【反向代理-&gt;Web站点】：nginx</p>
+<p>【Web站点-&gt;服务】：服务连接池</p>
+<p>【服务-&gt;数据】：数据均衡+请求均衡</p>
+<p>参考链接：<a href="http://developer.51cto.com/art/201609/517313.htm" target="_blank" rel="external">一分钟了解负载均衡</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/架构/">架构</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/其他/">其他</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/11/14/guan-yu-stackexchange-he-quora-de-qu-bie/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于StackExchange和Quora的区别</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2017/11/09/guan-yu-zhi-ye-gui-hua/">
+                        <span class="hidden-mobile">关于职业规划</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "关于负载均衡的理解小结&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

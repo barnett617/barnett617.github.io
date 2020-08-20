@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>vultr账单解析及使用ssr在vultr搭建代理 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2017-11-28 12:38">
+                    2017年11月28日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.3k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    14
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>今天就之前疑惑不解的vultr账单做了一波分析，终于算是破案了。借此也记录一下服务器搭建ssr的详细步骤。</p>
+<a id="more"></a>
+<p>先来看最终结果</p>
+<p><img src="http://trigolds.com/vultr0.png" srcset="/img/loading.gif" alt=""></p>
+<p>一开始打开vultr账单，我是懵比的</p>
+<p><img src="http://trigolds.com/vultr10.png" srcset="/img/loading.gif" alt=""></p>
+<p>这里面的加加减减使我很费解，不知道vultr的记账方式，也不知道它的扣款方式（原因是我从开通账户后就毫无规律的充值，但服务器的使用却一直未受影响而断过）</p>
+<hr>
+<p>首先我第一反应是看我总共实际花了多少钱。</p>
+<p>我的vultr是绑定Paypal作为付款方式，而Paypal中绑定了两张银行卡，一张储蓄卡，一张信用卡，在查阅了银行卡关于paypal的消费记录后统计如下</p>
+<p><img src="http://trigolds.com/vultr7.png" srcset="/img/loading.gif" alt=""></p>
+<p>然后我试着从vultr账单中与之响应对账，得到如下</p>
+<p><img src="http://trigolds.com/vultr8.png" srcset="/img/loading.gif" alt=""></p>
+<p>的确找到四笔是通过paypal消费的，再来看paypal的消费记录</p>
+<p><img src="http://trigolds.com/vultr9.png" srcset="/img/loading.gif" alt=""></p>
+<p>现在证实了一点，我一共在vultr花费了17.65美元，折合人民币123.6元</p>
+<hr>
+<p>那么接下来再通过这四笔明确的消费来反推其他账单记录的含义，发现下图这样一笔比较特殊的</p>
+<p><img src="http://trigolds.com/vultr5.png" srcset="/img/loading.gif" alt=""></p>
+<p>计算得到</p>
+<p><img src="http://trigolds.com/vultr6.png" srcset="/img/loading.gif" alt=""></p>
+<p>由此可见vultr是按小时计费，一开始承诺的每月5美元，指的是如果你用满一个月（744个小时，31天）为5美元，而使用就是指你的服务器开启着（记录中一开始有十几天没计费应该是我虽然开通了vultr并且也充了值，但是没建立服务器实例，或者说建立的实例没开启）</p>
+<p>归根结底，当服务器开启，每个月还是相当于5美元的，这样再看账单可以清晰一点</p>
+<p><img src="http://trigolds.com/vultr4.png" srcset="/img/loading.gif" alt=""></p>
+<p>那么更进一步，我回想到之前按照首页提示的奖励金额去关注了vultr的twitter账号，所以有了11月这三笔记录</p>
+<p><img src="http://trigolds.com/vultr3.png" srcset="/img/loading.gif" alt=""></p>
+<p>这三笔很明显是系统审核我的行为后为我以信用账户（accout credit）的方式分别充值了3美元</p>
+<p>再看本月总账单</p>
+<p><img src="http://trigolds.com/vultr1.png" srcset="/img/loading.gif" alt=""></p>
+<p>至此，整体应该算是破案了，我们可以用类比的思想（把陌生的事物类比成熟悉的事物，以便理解）可以理解为，vultr在开通账户的时候是需要先付款后消费，不存在试用（先免费用，再补交费用）的情况。</p>
+<p>但是当开通账户并充值以后，它的收费方式是每月1号，结算上个月的消费实际情况，会给你账单记录中发送一枚发票（invoice），你使用paypal进行的主动充值也会有所记录。但是可以先消费，后缴费。具体体现就是你这个月使用的费用是下个月1号结算，如果到时候你的vultr账户余额不足，它就会从你绑定的支付方式（比如paypal或信用卡）中自动扣款。</p>
+<p>最终再次整理账单分析</p>
+<p><img src="http://trigolds.com/vultr0.png" srcset="/img/loading.gif" alt=""></p>
+<hr>
+<p>下面是在vultr上搭建ssr的步骤（在国外服务器搭建代理）：</p>
+<p>首先，你得有台服务器，国外服务器，国内服务器也可以，不过达不到“代理”的效果</p>
+<p>然后，你得有ssr的客户端 <a href="https://pan.baidu.com/s/1nvdzD37" target="_blank" rel="external">下载</a></p>
+<p>接着你只需要在你的服务器上安装ssr服务，再通过ssr客户端访问，就可以实现让你电脑上的网络访问经由代理处理。</p>
+<p>代理的作用就是，首先它是国外的服务器，它可以轻松访问很多国外的资源，比如谷歌，比如youtube。然后它作为你的代理帮你拿到这些资源后，你和代理有着亲密的关系（通过ssr），这时你访问谷歌或者youtube，实际是在访问代理替你拿到的资源。（whatever）最终你实现了访问你本来访问不到的资源这样的效果。</p>
+<p>这么看来，关键在于搭建ssr服务这一步（和代理服务器搞好关系），那么其实这个操作也没什么难度，因为已经有大佬写了ssr这个东西，你只是需要安装而已。</p>
+<p>有这样的一键安装脚本</p>
+<p>不检查证书安装shadowsocksR<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">wget --no-check-certificate https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocksR.sh</div></pre></td></tr></table></figure></p>
+<p>将shadowsocksR设置为可执行<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">chmod +x shadowsocksR.sh</div></pre></td></tr></table></figure></p>
+<p>执行shadowsocksR并记录日志<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">./shadowsocksR.sh 2&gt;&amp;1 | tee shadowsocksR.log</div></pre></td></tr></table></figure></p>
+<p>安装过程中会提示你输入一些东西（当然，也会提示你如果不填会有默认项）</p>
+<p>密码：设置你通过ssr客户端连接ssr服务的密码</p>
+<p>服务端口：设置你的ssr服务在服务器上开放哪个端口提供外部访问</p>
+<p>以及加密方式等balabala其他参数信息（都可以根据提示填好，提示很清晰，只需英语好）</p>
+<p>最后，重启服务器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">reboot</div></pre></td></tr></table></figure>
+<p>在你本地的ssr客户端填入刚才在服务器设置的一系列参数（密码、端口、加密方式及其他）即可愉快地科学上网啦</p>
+<p>拓展：卸载shadowsocksR方法（当然，你要在安装shadowsocks的目录执行该命令）<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">./shadowsocks-go.sh uninstall</div></pre></td></tr></table></figure></p>
+<p>参考链接：</p>
+<p><a href="https://github.com/Alvin9999/new-pac/wiki/%E8%87%AA%E5%BB%BAss%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B" target="_blank" rel="external">https://github.com/Alvin9999/new-pac/wiki/%E8%87%AA%E5%BB%BAss%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/瞎鼓捣/">瞎鼓捣</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/其他/">其他</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/01/16/ru-he-she-ji-liang-hao-de-api-bing-qie-wei-shi-me-zhe-hen-chong-yao-yi/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">如何设计良好的API并且为什么这很重要（译）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2017/11/17/shi-yong-fen-zhi-bei-fen-hexo-bo-ke/">
+                        <span class="hidden-mobile">使用分支备份hexo博客</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "vultr账单解析及使用ssr在vultr搭建代理&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

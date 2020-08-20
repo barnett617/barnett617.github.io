@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>关于反向代理的整理 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2017-11-07 16:41">
+                    2017年11月7日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.9k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    20
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>之前一直对<strong>反向代理</strong>这个概念理解的很模糊，网上参阅了很多解释，看完也是觉得不够信服，相比较而言觉得解释的还算良好的是知乎上看到的一个回答<a href="https://www.zhihu.com/question/24723688" target="_blank" rel="external">https://www.zhihu.com/question/24723688</a>，但看了之后也仅限于“当时理解，过后就忘”，于是今天再次在stackoverflow看到的解释版本，特此翻译整理，留作备忘。</p>
+<a id="more"></a>
+<p>原文链接：<a href="https://stackoverflow.com/questions/224664/difference-between-proxy-server-and-reverse-proxy-server/366212#366212" target="_blank" rel="external">https://stackoverflow.com/questions/224664/difference-between-proxy-server-and-reverse-proxy-server/366212#366212</a></p>
+<p>如果当你访问不了这个链接的时候，也就说明，GFW限制了大陆网络内的主机访问stackoverflow的网站内容，此时你即需要通过<strong>代理服务器</strong>来作为你的代理，帮你取拿到远端stackoverflow网站上的内容取回给你，这就是正向代理的使用实例。</p>
+<p>而反向代理其实更常见，因为它充斥在我们每一天的网上冲浪之中，<strong>只不过你意识不到罢了</strong>（注意！这也就是正向代理和反向代理很大的特征区别之一：正向代理需要你去寻得一个代理来帮助你访问你访问不了的服务器资源，而反向代理是服务器端使用的代理，来处理你提交的访问请求，所以作为客户端的你是意识不到代理的存在的）。</p>
+<p>比如你通过浏览器访问百度网搜索一个条目，或者直接在地址栏输入stackoverflow.com，然而这个行为在互联网中有太多用户在做，所以百度或者stackoverflow的服务器不一定能够驾驭这么大的访问量，此时他们可能会把相同的服务部署在N多台服务器节点上，然后你其实访问到的是那些提供反向代理的服务器，反向代理服务器将大量的请求做了负载均衡处理，再把这些请求均衡合理地分配到那些提供相同服务的不同服务器节点上，这就是反向代理的实例。</p>
+<p>先上图：</p>
+<blockquote>
+<p>A picture is worth 1000 words.</p>
+</blockquote>
+<p>先是正向代理和反向代理分开使用的场景：</p>
+<p><img src="http://trigolds.com/proxy.png" srcset="/img/loading.gif" alt=""></p>
+<p>再是正向代理和反向代理同时使用的场景：</p>
+<p><img src="http://trigolds.com/proxy1.jpg" srcset="/img/loading.gif" alt=""></p>
+<p>接下来是本人对于stackoverflow上精彩回答的翻译，如有不准确之处请指正</p>
+<blockquote>
+<p>前面的回答都很准确，但可能太过于精简了。我会试着增加一些例子。<br>首先，“代理”这个词描述了某个人或者某个事物扮演着代表另一个人的角色。在计算机领域，我们讨论的即是一台服务器扮演着代表另一台计算机的角色。为了保证观点可达性（即观点可以被很容易的理解）这一目的（这句感觉翻译的不太好），我会限制我的讨论仅限于“web代理”，然而“代理”这一思想其实不仅限于web网站。</p>
+</blockquote>
+<h4 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h4><blockquote>
+<p>大多数关于web代理的讨论都指的是”正向代理”（这句感觉翻译得不甚准确）。这种情况下的代理事件其实就是“正向代理”代表请求者从另一个web站点取得数据。</p>
+<p>举个栗子，我会列举三台接入互联网的计算机。</p>
+<p>X = 你的计算机，或者说互联中的“客户机”</p>
+<p>Y = 代理站点，proxy.example.org</p>
+<p>Z = 你想要访问的网站，www.example.net</p>
+<p>通常，你可能是类似 X –&gt; Z 这样的直连。</p>
+<p>然而，在一些场景下，Y –&gt; Z 来代表X（去访问Z）更好，链条如下：X –&gt; Y –&gt; Z</p>
+<p>为什么X需要使用代理服务器的原因：</p>
+<p>X无法直接访问到Z:</p>
+<p>a)在X的互联网连接中某个拥有管理权限的人决定拦截所有X到Z站点的访问（比如GFW : ) ）</p>
+<p>实例：</p>
+<ol>
+<li><p>风暴蠕虫病毒蔓延，它欺骗人们去访问familypostcards2008.com，所以系统管理员封锁了对于这个网站的访问来保护用户们以避免其因为不小心而感染病毒。</p>
+</li>
+<li><p>一家大型公司的员工花费了太多的时间用在facebook.com的访问上，所以管理者想要这些访问在工作时间被屏蔽掉。</p>
+</li>
+<li><p>一家当地小学禁止了其对于playboy.com这个网站的互联网访问</p>
+</li>
+<li><p>政府无法控制人们发布新闻，所以它控制了新闻的访问取而代之，通过封锁类似wikipedia.org这样的网站，更多请查阅<strong><a href="http://www.onion-router.net/" target="_blank" rel="external">TOR</a></strong>或者<strong><a href="http://freenetproject.org/" target="_blank" rel="external">FreeNet</a></strong></p>
+</li>
+</ol>
+<p>b) Z点的管理员禁止了来自X的访问</p>
+<p>实例：</p>
+<ol>
+<li><p>Z站点的管理员被告知可能存在来自于X的黑客攻击尝试行为，所以管理员决定禁掉X的IP地址（<a href="http://www.netrange.com/" target="_blank" rel="external">http://www.netrange.com/</a>）</p>
+</li>
+<li><p>Z是一个论坛网站，X正在该论坛刷屏。Z禁掉了X。</p>
+</li>
+</ol>
+</blockquote>
+<h4 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h4><blockquote>
+<p>X = 你的计算机，或者说互联中的“客户机”</p>
+<p>Y = 反向代理站点，proxy.example.org</p>
+<p>Z = 你想要访问的网站，www.example.net</p>
+<p>通常，你可能是类似 X –&gt; Z 这样的直连。</p>
+<p>然而，在一些场景，对于Z的管理员限制掉或者不允许这样的直连更好，同时强迫访问者先去访问Y。所以，如同往常，我们通过 Y –&gt; Z 代表X取得想要访问的数据，链条如下： X –&gt; Y –&gt; Z</p>
+<p>相比“正向代理”不同的是，这次用户X并不知道他在访问Z，因为他只能看到他在和Y通信。Z服务端对于客户端来说不可见并且只有反向代理Y对于外部是可见的。所以一个反向代理是不需要在客户端做配置的。</p>
+<p>客户端X认为他只是在和Y进行通信（即X –&gt; Y），但事实上是Y在传导所有的通信（再一次成为X –&gt; Y –&gt; Z这样的通信结构）</p>
+<p>为什么Z想要设置一个代理服务器的原因：</p>
+<p>1）Z想要强迫所有对于它的通信访问都先经过Y。<br>a)Z有一个成千上万人想要访问的巨大web站点，但仅仅一个web服务器不能处理所有的网络请求。所以Z架设了许多许多的服务器，并在互联网放置一个反向代理，以便当用户想要访问Z的时候把他们的访问请求派发到离他们最近的服务器去。这也是<strong>内容分发网络</strong>（CDN）概念如何工作的一部分。</p>
+<p>实例：</p>
+<ol>
+<li><p><a href="http://trailers.apple.com/trailers/" target="_blank" rel="external">Apple Trailers</a>使用<a href="https://www.akamai.com/" target="_blank" rel="external">Akamai</a></p>
+</li>
+<li><p>Jquery.com使用<a href="http://aws.amazon.com/s3/" target="_blank" rel="external">CloudFront CDN</a>来存放它的javascript文件（例如：<a href="http://static.jquery.com/files/rocker/scripts/custom.js" target="_blank" rel="external">sample</a>）</p>
+</li>
+<li><p>等等</p>
+</li>
+</ol>
+<p>2）Z的管理员担心来自于对其网站内容的报复行为，并且不想直接向大众暴露其主服务器。</p>
+<ol>
+<li>类似”Canadian Pharmacy”这样的垃圾品牌的拥有者看上去拥有成千上万的服务器，然而实际上它大多数网站都只部署在比看上去少得多的服务器上。另外，关于刷屏的abuse complaints实际上只会关掉那些公共服务器，而非主服务器。（最后这段实在无力翻译，自己都看着难受 :( ）</li>
+</ol>
+<p>在如上的场景，Z决定选择Y（作为反向代理）</p>
+</blockquote>
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/网络/">网络</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/网络/">网络</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/11/08/shi-yong-hexo-da-jian-ge-ren-bo-ke-jiao-cheng/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">使用hexo搭建个人博客教程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2017/11/01/guan-yu-matlab-mou-hao-ding-yi-ju-zhen-de-xiao-li-zi/">
+                        <span class="hidden-mobile">关于matlab冒号定义矩阵的小栗子</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "关于反向代理的整理&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

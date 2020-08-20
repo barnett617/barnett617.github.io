@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>React教程——安装篇 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2018-02-07 14:59">
+                    2018年2月7日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    2.1k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    23
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>React官网教程系列之前期准备</p>
+<a id="more"></a>
+<h2 id="初尝React"><a href="#初尝React" class="headerlink" title="初尝React"></a>初尝React</h2><p>在线尝试React或在本地开发环境安装React</p>
+<h3 id="在线版"><a href="#在线版" class="headerlink" title="在线版"></a>在线版</h3><p>如果你对React的乐趣在于只是随便玩玩，那你可以使用在线编程环境。在<a href="https://codepen.io/pen?&editors=0010" target="_blank" rel="external">CodePen</a>或<a href="https://codesandbox.io/s/new" target="_blank" rel="external">CodeSandbox</a>尝试Hello World模板</p>
+<h3 id="最小HTML模板"><a href="#最小HTML模板" class="headerlink" title="最小HTML模板"></a>最小HTML模板</h3><p>如果你更想使用你自己的文本编辑器，你也可以用下载<a href="https://raw.githubusercontent.com/reactjs/reactjs.org/master/static/html/single-file-example.html" target="_blank" rel="external">这个</a>HTML文件，编辑它并从你本地浏览器中的文件系统打开它。它会有一个缓慢的代码转换，所以不要在生产中使用它。</p>
+<h3 id="接下来"><a href="#接下来" class="headerlink" title="接下来"></a>接下来</h3><h4 id="快速上手"><a href="#快速上手" class="headerlink" title="快速上手"></a>快速上手</h4><ul>
+<li><p>前往<a href="https://reactjs.org/docs/hello-world.html" target="_blank" rel="external">快速上手</a>部分来一步一步按照指引学习React的概念</p>
+</li>
+<li><p>尝试<a href="https://reactjs.org/tutorial/tutorial.html" target="_blank" rel="external">教程</a>作为一个动手实践机会</p>
+</li>
+</ul>
+<h4 id="完整开发环境"><a href="#完整开发环境" class="headerlink" title="完整开发环境"></a>完整开发环境</h4><p>如果你初次接触React或者仅仅用于实验，上面的轻量解决方案很适合你</p>
+<p>当你准备好使用React去构建你第一个程序时，查阅下面的安装指引。这些安装被设计用来帮助你并获得良好的开发体验，并且可用于生产。它们包括代码检验（linting）、测试和最佳构建（optimizations built-in)；然而它们需要更多的时间和空间来安装</p>
+<ul>
+<li><p>使用React<a href="https://reactjs.org/docs/add-react-to-a-new-app.html" target="_blank" rel="external">创建一个新的应用</a>：使用一个包含完整特性的开始工具套件创建一个新的应用</p>
+</li>
+<li><p>将React<a href="https://reactjs.org/docs/add-react-to-an-existing-app.html" target="_blank" rel="external">添加进一个已存在的应用</a>：将React添加进一个构建系统或一个更大的应用</p>
+</li>
+</ul>
+<h5 id="将React添加一个新的应用"><a href="#将React添加一个新的应用" class="headerlink" title="将React添加一个新的应用"></a>将React添加一个新的应用</h5><p>在一个新的应用上使用React启动的最简单方式就是使用一个开始工具套件（strater kit）</p>
+<blockquote>
+<p>这页描述了创建一个你所需要的单页应用，以提供一个舒服的工作流，包含代码检查（linting）、测试和最佳生产以及更多。</p>
+<p>全特性工具需要一些时间和空间来安装。如果你想要一个轻量环境来用React做实验，查看上面的初尝React方式，一个单一的HTML文件足够开始。</p>
+<p>最后，如果你不是构建单页应用，你可以将React<a href="https://reactjs.org/docs/add-react-to-an-existing-app.html" target="_blank" rel="external">添加进已存在的构建管道</a>或者从<a href="https://reactjs.org/docs/cdn-links.html" target="_blank" rel="external">CDN</a>使用它而<a href="https://reactjs.org/docs/react-without-jsx.html" target="_blank" rel="external">无需构建</a></p>
+</blockquote>
+<h6 id="创建React应用"><a href="#创建React应用" class="headerlink" title="创建React应用"></a>创建React应用</h6><p><a href="https://github.com/facebook/create-react-app" target="_blank" rel="external">Create React App</a>是开始构建一个新的React单页应用最好的方式。它建立了你的开发环境，这样你就可以使用到最新的JavaScript特性，提供你一个良好的开发体验，为你最佳化你的生产应用。你将需要机器上安装大于版本6的Node</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">npm install -g create-react-app时</div><div class="line">create-react-app my-app</div><div class="line"></div><div class="line">cd my-app</div><div class="line">npm start</div></pre></td></tr></table></figure>
+<p>如果你安装了5.2.0以上版本的npm，你可能使用m<a href="https://www.npmjs.com/package/npx" target="_blank" rel="external">npx</a>代替</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">npx create-react-app my-app</div><div class="line"></div><div class="line">cd my-app</div><div class="line">npm start</div></pre></td></tr></table></figure>
+<p>创建React应用不会处理后端逻辑和数据库；它只是创建了一个前端构建管道，所以你可以把它用作任何后端。它底层使用比如<a href="http://babeljs.io/" target="_blank" rel="external">Babel</a>和<a href="https://webpack.js.org/" target="_blank" rel="external">Webpack</a>的构建工具，但是只需要零配置就能工作。</p>
+<p>当你准备好部署你的产品，运行npm run build将会在build目录为你的应用创建一个最佳构建。你可以通过它的<a href="https://github.com/facebook/create-react-app#create-react-app-" target="_blank" rel="external">README</a>和<a href="https://github.com/facebook/create-react-app#create-react-app-" target="_blank" rel="external">用户手册</a>学习更多关于Create React App</p>
+<h6 id="其他启动工具"><a href="#其他启动工具" class="headerlink" title="其他启动工具"></a>其他启动工具</h6><p>我们创建了一份官方推荐的<a href="https://reactjs.org/community/starter-kits.html" target="_blank" rel="external">第三方启动工具列表</a></p>
+<p>它们在各自侧重点有些细微不同，但都是生产就绪的、良好维护的并且不需要任何配置就能开始的。</p>
+<p>你也可以查看一个由社区贡献的<a href="https://reactjs.org/community/starter-kits.html#other-starter-kits" target="_blank" rel="external">其他工具列表</a></p>
+<h6 id="高级使用"><a href="#高级使用" class="headerlink" title="高级使用"></a>高级使用</h6><p>如果你倾向于手动配置一个工程，查阅下一部分的<a href="https://reactjs.org/docs/add-react-to-an-existing-app.html#installing-react" target="_blank" rel="external">安装React</a></p>
+<h5 id="将React添加进一个已存在的应用"><a href="#将React添加进一个已存在的应用" class="headerlink" title="将React添加进一个已存在的应用"></a>将React添加进一个已存在的应用</h5><p>你无需重写你的应用以开始使用React</p>
+<p>我们推荐添加React进你应用的一块小的部分，比如一个独立的组件，这样你可以在你的用例中看到它是否工作</p>
+<p>虽然React可以被使用于<a href="https://reactjs.org/docs/react-without-es6.html" target="_blank" rel="external">没有构建管道的情况</a>，但我们推荐建立构建管道，这样你可以提高生产。一个现代的构建管道通常组成：</p>
+<ul>
+<li><p>一个包管理器，比如<a href="https://yarnpkg.com" target="_blank" rel="external">Yarn</a>或者<a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a>。这使你能够利用第三方包的浩瀚生态，并轻易地安装或者更新它们</p>
+</li>
+<li><p>一个打包器，比如<a href="https://webpack.js.org/" target="_blank" rel="external">webpack</a>或者<a href="http://browserify.org/" target="_blank" rel="external">Browserify</a>。这让你书写模块化的代码并把它们打包到一起成小的包，以使得加载时最优</p>
+</li>
+<li><p>一个编译器，例如<a href="http://babeljs.io/" target="_blank" rel="external">Babel</a>。它让你书写现代化化JavaScript代码，却仍能工作在旧的浏览器</p>
+</li>
+</ul>
+<h6 id="安装React"><a href="#安装React" class="headerlink" title="安装React"></a>安装React</h6><blockquote>
+<p>一旦安装，我们强烈推荐建立一个<a href="https://reactjs.org/docs/optimizing-performance.html#use-the-production-build" target="_blank" rel="external">生产构建进程</a>以确保你在生产中使用React的快速版本</p>
+</blockquote>
+<p>我们推荐使用Yarn或者npm来管理前端依赖。如果你初次接触包管理器，<a href="https://yarnpkg.com/en/docs/getting-started" target="_blank" rel="external">Yarn文档</a>是一个良好开始的地方。</p>
+<p>使用Yarn安装React并运行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">yarn init</div><div class="line">yarn add react react-dom</div></pre></td></tr></table></figure>
+<p>使用npm安装React并运行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">npm init</div><div class="line">npm install --save react react-dom</div></pre></td></tr></table></figure>
+<p>Yarn和npm都是从npm注册中心下载</p>
+<blockquote>
+<p>为避免潜在的不兼容问题，所有的react包应该使用相同的版本。（这包括：react、react-dom、react-test-renderer等等）</p>
+</blockquote>
+<h6 id="使ES6和JSX生效"><a href="#使ES6和JSX生效" class="headerlink" title="使ES6和JSX生效"></a>使ES6和JSX生效</h6><p>我们推荐使用伴随Babel的React以使得你使用ES6和JSX在你的JavaScript代码中。ES6是一个现代JavaScript代码的集合，使得开发更简单，JSX是一个使得JavaScript语言和React一起良好工作的拓展</p>
+<p><a href="https://babeljs.io/docs/setup/" target="_blank" rel="external">Babel安装指引</a>解释了如何配置Babel在许多不同的构建环境。确保你安装<a href="http://babeljs.io/docs/plugins/preset-react/#basic-setup-with-the-cli-" target="_blank" rel="external">babel-preset-react</a>和<a href="http://babeljs.io/docs/plugins/preset-env/" target="_blank" rel="external">babel-preset-env</a>并确保它们在你的<a href="http://babeljs.io/docs/usage/babelrc/" target="_blank" rel="external">.babelrc</a>配置中，你就可以良好工作了。</p>
+<h6 id="使用ES6和JSX的Hello-World"><a href="#使用ES6和JSX的Hello-World" class="headerlink" title="使用ES6和JSX的Hello World"></a>使用ES6和JSX的Hello World</h6><p>我们推荐使用像webpack或Browserify这样的打包器，这样你可以书写模块化代码并它们打包到一起进小的包裹以在加载时最优化</p>
+<p>最小的React例子：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</div><div class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">'react-dom'</span>;</div><div class="line"></div><div class="line">ReactDOM.render(</div><div class="line">	&lt;h1&gt;Hello, world!<span class="xml"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>,</div><div class="line">	<span class="built_in">document</span>.getElementById(<span class="string">'root'</span>)</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>这份代码将id为root的元素渲染成一个DOM元素，所以你需要在你的HTML文件的某处有<div id="root"></div></p>
+<p>类似的，你可以将你使用任何其他JavaScriptUI库写的已存在的应用中某处的DOM元素内渲染一个React组件</p>
+<p>了解更多关于<a href="https://reactjs.org/docs/integrating-with-other-libraries.html#integrating-with-other-view-libraries" target="_blank" rel="external">集成React和已存在代码</a></p>
+<h6 id="开发和生产版本"><a href="#开发和生产版本" class="headerlink" title="开发和生产版本"></a>开发和生产版本</h6><p>默认的，React包含许多有帮助的警告。这些警告在开发中非常有用。</p>
+<p>然而，它使得开发版本变得更大更慢，所以你应该当你部署你的应用时使用生产版本。</p>
+<p>学习<a href="" https:="" reactjs.org="" docs="" optimizing-performance.html#use-the-production-build="">如何辨别你的网站是否正在服务正确版本的React</a>，还有如何最高效地配置生产构建进程：</p>
+<ul>
+<li><p><a href="https://reactjs.org/docs/optimizing-performance.html#create-react-app" target="_blank" rel="external">使用Create React App创建一个生产构建</a></p>
+</li>
+<li><p>使用单文件构建创建一个生产构建</p>
+</li>
+<li><p>使用Brunch创建一个生产构建</p>
+</li>
+<li><p>使用Browserify创建一个生产构建</p>
+</li>
+<li><p>使用Rollup创建一个生产构建</p>
+</li>
+<li><p>使用webpack创建一个生产构建</p>
+</li>
+</ul>
+<h6 id="使用CDN"><a href="#使用CDN" class="headerlink" title="使用CDN"></a>使用CDN</h6><p>如果你不想用npm管理客户端包，react和react-dom的npm包也提供了单文件版本在umd目录。详情见<a href="https://reactjs.org/docs/cdn-links.html" target="_blank" rel="external">CDN页</a></p>
+<h5 id="CDN链接"><a href="#CDN链接" class="headerlink" title="CDN链接"></a>CDN链接</h5><p>React的UMD构建和ReactDOM在CDN之间可用</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">&lt;script crossorigin src=<span class="string">"https://unpkg.com/react@16/umd/react.development.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div><div class="line">&lt;script crossorigin src=<span class="string">"https://unpkg.com/react-dom@16/umd/react-dom.development.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
+<p>上面的版本仅对开发而言，对于生产不适用。简化和优化生产版本如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">&lt;script crossorigin src=<span class="string">"https://unpkg.com/react@16/umd/react.production.min.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div><div class="line">&lt;script crossorigin src=<span class="string">"https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
+<p>加载react和react-dom一个特定的版本，用版本号替换16即可</p>
+<h6 id="为什么有crossorigin这个属性"><a href="#为什么有crossorigin这个属性" class="headerlink" title="为什么有crossorigin这个属性"></a>为什么有crossorigin这个属性</h6><p>如果你从CDN提供React服务，我们推荐你保持crossorigin这个属性：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">&lt;script crossorigin src=<span class="string">"..."</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
+<p>我们也推荐去确认你正在使用的CDN集的Access-Control-Allow-Origin: *的HTTP头（在HTTP相应头包含）。这使得一个更好的<a href="https://reactjs.org/blog/2017/07/26/error-handling-in-react-16.html" target="_blank" rel="external">错误处理体验</a>在React16和以后的版本</p>
+<p>参考链接：<a href="https://reactjs.org/docs/try-react.html" target="_blank" rel="external">https://reactjs.org/docs/try-react.html</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/前端/">前端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/react/">react</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/02/07/linux-chang-yong-ming-ling-chang-qi-geng-xin/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">linux常用命令(长期更新)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2018/02/07/ru-he-guan-li-node-he-npm-de-geng-xin/">
+                        <span class="hidden-mobile">工具篇——如何管理node和npm的更新</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "React教程——安装篇&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

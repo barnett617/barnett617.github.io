@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>git学习总结 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2017-11-17 09:54">
+                    2017年11月17日 上午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.9k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    21
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>对于Git学习的一些整理，包含常用命令整理</p>
+<a id="more"></a>
+<p>个人觉得，对于一些开源工具，最好的学习资源还是其官网，我们就先来分析一波Git究竟是做什么的。</p>
+<h3 id="概念解析"><a href="#概念解析" class="headerlink" title="概念解析"></a>概念解析</h3><p>git官网的定义是：Git是一种免费并且开源的分布式版本控制系统，被设计用来快速高效地处理堆积成大工程的每一块小部分。（个人翻译，不喜勿喷）</p>
+<p>Git简单易用、占用空间小并且性能优越。它远超过一些伴有类似廉价的本地分支、方便的阶段区域和多工作流特点的配置管理工具（SCM，Software Configuration Management），比如SVN、CVS、Perforce和ClearCase这些。</p>
+<p>Git允许同一组下的人们同一时刻在相同的文档上工作（通常是代码），并且不会踩到其他人的脚趾（形容两个人同时在相同的文档上工作也不会发生冲突）</p>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
+<li><p>小而快速（Small and Fast）</p>
+</li>
+<li><p>分布式（Distributed,这也是它比SVN优势明显的地方）</p>
+</li>
+<li><p>数据保证（Data Assurance）</p>
+</li>
+<li><p>分阶段区域（Staging Area）</p>
+</li>
+<li><p>免费并开源（Free and Open Source）</p>
+</li>
+</ul>
+<h3 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h3><p>初级教程：<a href="https://try.github.io/levels/1/challenges/1" target="_blank" rel="external">Try Git</a></p>
+<p><img src="http://trigolds.com/git0.png" srcset="/img/loading.gif" alt=""></p>
+<p>高级教程：<a href="http://gitreal.codeschool.com/levels/1/challenges/1" target="_blank" rel="external">gitreal</a></p>
+<p><img src="http://trigolds.com/git12.png" srcset="/img/loading.gif" alt=""></p>
+<p>官方书籍：<a href="https://git-scm.com/book/zh/v2" target="_blank" rel="external">Pro Git</a></p>
+<h3 id="使用步骤（包含常见命令）"><a href="#使用步骤（包含常见命令）" class="headerlink" title="使用步骤（包含常见命令）"></a>使用步骤（包含常见命令）</h3><p>1.初始化<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git init</div></pre></td></tr></table></figure></p>
+<p>init命令会创建一系列git结构的文件，如下图：</p>
+<p><img src="http://trigolds.com/git11.png" srcset="/img/loading.gif" alt=""></p>
+<p>仅对一个制定目录创建git结构时使用，用于将某个目录交给git管理</p>
+<p>2.查看git状态<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git status</div></pre></td></tr></table></figure></p>
+<p>可在任何时间阶段使用， 以查看当前git管理下的文件状态</p>
+<p><img src="http://trigolds.com/git-status.png" srcset="/img/loading.gif" alt=""></p>
+<p>3.将文件交予git管理<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git add filename</div></pre></td></tr></table></figure></p>
+<p>对于在git init后的目录里的每一个文件都有tracked和untracked两种状态，也就是<strong>是否被git追溯（管理）</strong></p>
+<p>对于每一个文件，要么通过git add交由git管理，要么加入ignore行列，不然新创建的文件就会处于不受git管理的“游离”状态。</p>
+<p>当对于新创建的文件操作git add之后，文件就会处于Staging Area（阶段区域），在commit之前还尚未放进git的仓库（repository），所以在文件到仓库之前，我们可以将文件添加（add）进或是移出Staging Area（暂存区）</p>
+<p>当然我们也可以对文件进行批量添加到暂存区，比如git add ‘*.txt’来将所有后缀为txt的文件添加进暂存区（注意引号）</p>
+<p>4.将暂存区的文件提交到仓库<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git commit -m &quot;提交注释&quot;</div></pre></td></tr></table></figure></p>
+<p>5.查看提交历史<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git log</div></pre></td></tr></table></figure></p>
+<p>6.将本地仓库与远端仓库建立关联<br>为了将本地仓库推到远端Github服务器中（Push local Repo to Github Server），我们需要添加一个远端仓库（add a remote repository）<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git remote add origin `Remote Repository URL`</div></pre></td></tr></table></figure></p>
+<p>这条命令初学者看起来晦涩难懂，我也是研究了很多遍才大致理解，首先这与普通的git add不同的是，git add是将本地新建的文件添加到git的暂存区，而git remote add是表示添加一个远端仓库，与本地的仓库建立关联。</p>
+<p>默认取名origin，直观易懂，后面的URL也就是远端仓库的地址，虽然在远端（Github）创建仓库的时候我们创建了名字，但现在毕竟本地还没有那个仓库，所以相当于先在本地创建一个空名字，以备和远端的实体仓库对应。</p>
+<blockquote>
+<p>当你使用git remote命令时，可以看到你add的“虚拟”远端仓库，它们的地址就是你add时最后的URL</p>
+</blockquote>
+<p>7.将本地仓库内容推到远端<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git push -u origin master</div></pre></td></tr></table></figure></p>
+<p>我们表示远端仓库的代号是origin，默认的本地分支名是master，-u是告诉git去记住这两个参数（origin master），这样下次提交就可以简化为git push</p>
+<hr>
+<p>经过上面的7个步骤，我们就完成了在本地创建git仓库，并创建文件交由git管理，并将本地仓库与远端仓库进行关联，再将本地仓库的文件上推到远端仓库</p>
+<hr>
+<p>接下来是关于远端发生变更，本地来查看（比如其他人fork了你的仓库，并且commit了内容，并pull request）</p>
+<p>8.将远端仓库的最新文件拉到本地<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git pull origin master</div></pre></td></tr></table></figure></p>
+<p>看懂git push origin master再来看这条命令就好理解一些，git pull是拉（下载）代码，也就是从远端往本地拉，然而其实本地的origin其实就是一个关联了远端仓库的钩子，你从origin拉代码就是从远端仓库拉代码，而拉下来的代码要放在哪个分支，这里选择了master主干分支</p>
+<p>9.对比拉下来的远端仓库最新代码和本地的区别<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git diff HEAD</div></pre></td></tr></table></figure></p>
+<p>HEAD是一个指针，指向我们最新commit的地方，不加HEAD，默认也是与HEAD对比</p>
+<h4 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h4><p>10.使用diff命令对比暂存区文件之间的区别<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git diff --staged</div></pre></td></tr></table></figure></p>
+<p>前面提到过git add命令是将文件添加入暂存区，即add to stage</p>
+<p>11.回撤add行为<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git reset</div></pre></td></tr></table></figure></p>
+<p>我们可以通过git add将文件交由git管理，同样也可以通过git reset将文件脱离git管理，即移出暂存区（unstage file）。<br>当执行完git reset somefile后，somefile会脱离git管理，但文件依旧会在那里。</p>
+<p>12.Undo<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git checkout -- somefile（注意破折号与文件名之间有一个空格，否则会提示“未定义的选项‘--文件名’”）</div></pre></td></tr></table></figure></p>
+<p>可以通过git checkout命令将文件恢复成它们上一次提交前的样子</p>
+<p>13.创建分支（branch out）<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git branch branchname</div></pre></td></tr></table></figure></p>
+<p>当需要在主分支之外开发新功能或者修改bug，需要拉另外的分支以与主分支分离，来进行提交，当工作完成后可以再将其分支合并回主分支（merge back to master）<br>当直接输入git branch命令是查看当前分支情况，当git branch后面加任意名字即为创建新的分支</p>
+<p>14.切换分支<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git checkout branchname</div></pre></td></tr></table></figure></p>
+<p>15.清除文件<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git rm filename</div></pre></td></tr></table></figure></p>
+<p>git rm命令不仅会删除你本地的实体文件，还会同时将这些删除行为追溯到git（stage these removal）<br>删除时同样可以使用通配符（wildcard）来一次清扫多个文件，例如git rm ‘*.txt’<br>当然这些删除行为也需要通过commit来通知仓库，尽管是删除文件，但对于git来说都是新增一次操作<br>此时在新建的分支，将所有的文件删除并提交，仅是对本分支的操作，当切换到主分支时，主分支依然是原样（分支相当于对主分支的拷贝，然而实际实现并不是通过拷贝实现）</p>
+<p>16.合并分支<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git merge branchname</div></pre></td></tr></table></figure></p>
+<p>git merge是将输入的分支合并到当前分支，一般是切回到主分支，执行合并命令，来将其他某一个分支合并到主分支</p>
+<p>17.删除分支<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git branch -d branchname</div></pre></td></tr></table></figure></p>
+<p>当分支合并回主分支后，就没用了，可以进行删除</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>1.先在本地通过git创建工程，然后上传到远程新建的空仓库(Github)</p>
+<p>2.在远端仓库（Github）创建文件或工程，克隆到本地，进行修改后再提交到远端仓库</p>
+<p>3.fork其他人的仓库，若符合工程结构，则下载到本地可直接运行，修改，提交</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://git-scm.com/" target="_blank" rel="external">git官网</a></li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/开发/">开发</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/git/">git</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/11/17/markdown-yu-fa-xue-xi-zheng-li/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Markdown语法学习整理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2017/11/16/guan-yu-centos-de-iptables-yi-ji-firewalld-de-zong-jie/">
+                        <span class="hidden-mobile">关于centos的iptables以及firewalld的总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "git学习总结&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>js学习笔记——局部变量和全局变量 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2018-01-19 16:34">
+                    2018年1月19日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.2k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    14
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>js的局部变量和全局变量</p>
+<a id="more"></a>
+<h3 id="大纲"><a href="#大纲" class="headerlink" title="大纲"></a>大纲</h3><ul>
+<li><p>如何声明局部变量和全局变量</p>
+</li>
+<li><p>js变量作用域基于特有的作用域链</p>
+</li>
+<li><p>js没有块级作用域（ES5-）</p>
+</li>
+<li><p>函数中声明的变量在整个函数中都有定义</p>
+</li>
+</ul>
+<h3 id="声明局部变量和全局变量"><a href="#声明局部变量和全局变量" class="headerlink" title="声明局部变量和全局变量"></a>声明局部变量和全局变量</h3><ul>
+<li><p>全局变量——定义在函数外的变量</p>
+</li>
+<li><p>局部变量——函数内部声明的变量</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="string">'global'</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getLocal</span>(<span class="params"></span>)	</span>&#123;</div><div class="line">	<span class="keyword">var</span> a = <span class="string">'local'</span>;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">&#125;</div><div class="line"></div><div class="line">getLocal();</div><div class="line"><span class="built_in">console</span>.log(a);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">local</div><div class="line">global</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">a = <span class="string">'global'</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getLocal</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	a = <span class="string">'local'</span>;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">	b = <span class="string">'local'</span>;</div><div class="line">	<span class="built_in">console</span>.log(b);</div><div class="line">&#125;</div><div class="line"></div><div class="line">getLocal();</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(a);</div><div class="line"><span class="built_in">console</span>.log(b);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">local</div><div class="line">local</div><div class="line">local</div><div class="line">local</div></pre></td></tr></table></figure>
+<p>疑问：</p>
+<p>函数外的a为什么变成local？</p>
+<p>函数外为什么可以访问b？</p>
+<p>解析：</p>
+<p><strong>函数体内部，局部变量优先级比同名全局变量高</strong></p>
+<p><strong>函数体内声明变量不使用var，会暴露在全局上下文中，和现有变量冲突，并覆盖同名全局变量</strong></p>
+<h3 id="变量作用域链"><a href="#变量作用域链" class="headerlink" title="变量作用域链"></a>变量作用域链</h3><p>每当js执行时会有一个对应的执行环境被创建（每一个方法在自己独有的执行环境中执行）</p>
+<p>执行环境中的重要部分——函数的调用对象（存储相应函数的局部变量）</p>
+<blockquote>
+<p>函数的执行环境包含了调用对象，调用对象的属性就是函数的局部变量，每个函数在这样的执行环境中执行。函数之外的代码在另一个环境中执行，包含了全局变量。</p>
+</blockquote>
+<h4 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h4><p>对象组成的列表或链</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> rain = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">rainMan</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> man = <span class="number">2</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> innerVar = <span class="number">4</span>;</div><div class="line"></div><div class="line">		<span class="built_in">console</span>.log(rain);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	inner();</div><div class="line">&#125;</div><div class="line"></div><div class="line">rainMan();</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1</div></pre></td></tr></table></figure>
+<p>解析：</p>
+<ol>
+<li>rainMain()</li>
+<li>man和inner()分别是rainMain定义的变量和函数</li>
+<li>执行inner()</li>
+<li>寻找rain</li>
+<li>先在inner内部找，没找到</li>
+<li>继续在rainMain中找，没找到</li>
+<li>在全局对象找，找到，输出1</li>
+<li>若全局对象中还未找到则报错：Uncaught ReferenceError: rain is not defined</li>
+</ol>
+<p>在全局的js执行环境中，作用域链只包含一个对象——全局对象</p>
+<p>在函数的执行环境中，同时包含函数的调用对象</p>
+<p>js的函数可嵌套——每个函数执行环境的作用域链可能包含不同数目个对象</p>
+<p>一个非嵌套的函数的执行环境中，作用域链包含这个函数的调用对象和全局对象</p>
+<p>嵌套的函数的执行环境中，作用域链包含嵌套的每一层函数的调用对象以及全局变量</p>
+<h3 id="JS没有块级作用域"><a href="#JS没有块级作用域" class="headerlink" title="JS没有块级作用域"></a>JS没有块级作用域</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkVariable</span>(<span class="params">obj</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> i = <span class="number">0</span>;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> obj == <span class="string">'object'</span>) &#123;</div><div class="line">		<span class="keyword">var</span> j = <span class="number">0</span>;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> k = <span class="number">0</span>; k &lt; <span class="number">3</span>; k++) &#123;</div><div class="line">			<span class="built_in">console</span>.log(k);</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">console</span>.log(k);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">console</span>.log(j);</div><div class="line">&#125;</div><div class="line"></div><div class="line">checkVariable(<span class="keyword">new</span> <span class="built_in">Object</span>());</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">0</div><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">0</div></pre></td></tr></table></figure>
+<p>i,j,k作用域相同，都在checkVariable()函数内都是全局的</p>
+<p>函数中声明的所有变量，无论在哪里声明，在整个函数中都有定义</p>
+<h3 id="函数中声明的变量在整个函数中都有定义（即使在声明之前）"><a href="#函数中声明的变量在整个函数中都有定义（即使在声明之前）" class="headerlink" title="函数中声明的变量在整个函数中都有定义（即使在声明之前）"></a>函数中声明的变量在整个函数中都有定义（即使在声明之前）</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkVariable</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		a = <span class="number">100</span>;</div><div class="line">	&#125;</div><div class="line">	inner();</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">&#125;</div><div class="line">checkVariable();</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">100</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkVariable</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">	<span class="keyword">var</span> a = <span class="number">2</span>;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">&#125;</div><div class="line">checkVariable();</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">undefined</div><div class="line">2</div></pre></td></tr></table></figure>
+<p>原因：checkVariable()内部变量a在整个函数内部有定义（var a = 2进行了声明）</p>
+<p>于是在<strong>整个函数内隐藏了同名全局变量a</strong></p>
+<p>相当于<br><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkVariable</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> a;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">	a = <span class="number">2</span>;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">&#125;</div><div class="line"></div><div class="line">checkVariable();</div></pre></td></tr></table></figure></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>js变量的域根据方法块划分，而非for、while、if块（因为没有块作用域）</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkVariable</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(i);</div><div class="line"></div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</div><div class="line">		<span class="built_in">console</span>.log(i);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(i);</div><div class="line"></div><div class="line">	<span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line">		<span class="keyword">var</span> j = <span class="number">1</span>;</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(j);</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (<span class="literal">true</span>) &#123;</div><div class="line">		<span class="keyword">var</span> k = <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">console</span>.log(k);</div><div class="line">&#125;</div><div class="line"></div><div class="line">checkVariable();</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(i);</div><div class="line"><span class="built_in">console</span>.log(j);</div><div class="line"><span class="built_in">console</span>.log(k);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">0</div><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">1</div><div class="line">1</div><div class="line">Uncaught ReferenceError: i is not defined</div></pre></td></tr></table></figure>
+<p>js在执行前对整个脚本做分析（包括局部变量）以确定变量是局部变量还是全局变量</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkVariable</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">	a = <span class="number">2</span>;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">	<span class="keyword">var</span> a;</div><div class="line">	<span class="built_in">console</span>.log(a);</div><div class="line">&#125;</div><div class="line">checkVariable();</div><div class="line"><span class="built_in">console</span>.log(a);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">undefined</div><div class="line">2</div><div class="line">2</div><div class="line">1</div></pre></td></tr></table></figure>
+<p>函数中声明的变量在整个函数中都有定义（即使在声明之前）</p>
+<p>这里虽然a一开始未使用var声明，但在js一开始的扫描时发现后面有var对a进行声明，所以a不会暴露在全局，覆盖同名全局变量a，所以函数外面的输出1</p>
+<p>由于a在函数内部后面是使用var声明的，所以在前面的输出中能够输出2，此时其实a已经被声明了，整个函数内部是整体分析的，所以才会出现函数中的变量在声明之前被定义（a = 2）</p>
+<p>参考：<a href="https://www.w3cplus.com/javascript/the-basics-of-variable-scope-in-javascript.html" target="_blank" rel="external">https://www.w3cplus.com/javascript/the-basics-of-variable-scope-in-javascript.html</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/前端/">前端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/javascript/">javascript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/01/19/js-xue-xi-bi-ji-this-guan-jian-zi/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">js学习笔记——this关键字</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2018/01/19/js-xue-xi-bi-ji-bi-bao/">
+                        <span class="hidden-mobile">js学习笔记——闭包</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "js学习笔记——局部变量和全局变量&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

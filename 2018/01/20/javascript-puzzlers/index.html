@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>javascript-puzzlers - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2018-01-20 09:22">
+                    2018年1月20日 上午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.8k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    34
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>关于深入理解js的44道wired题目，经实际验证及分析的学习笔记。</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;].map(parseInt)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[1, NaN, NaN]</div></pre></td></tr></table></figure>
+<p>map()<br>map passes 3 params (element, index, array)<br>parseInt<br>take two parameters (val, radix)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">typeof null</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&quot;object&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">null instanceof object</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div></pre></td></tr></table></figure>
+<p>typeof always return “object” for <strong>native non callable objects</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[ [3, 2, 1].reduce(Math.pow), [].reduce(Math.pow) ]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">reduce on an empty array without an initial value throws TypeError</div></pre></td></tr></table></figure>
+<p>array.reduce()<br>Math.pow</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> val = <span class="string">'smtg'</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'Value is '</span> + (val === <span class="string">'smtg'</span>) ? <span class="string">'Something'</span> : <span class="string">'Nothing'</span>);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Something</div></pre></td></tr></table></figure>
+<p>the + operator has higher precedence than the ternary(三元) one</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">'World!'</span>;</div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> name === <span class="string">'undefined'</span>) &#123;</div><div class="line">		<span class="keyword">var</span> name = <span class="string">'Jack'</span>;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'Goodbye '</span> + name);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">'Hello '</span> + name);</div><div class="line">	&#125;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Goodbye Jack</div></pre></td></tr></table></figure>
+<p>The var declaration is hoisted to the function scope, but the initialization is not.<br>声明被隔离，初始化没有<br>declaration<br>initialization<br>闭包</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> END = <span class="built_in">Math</span>.pow(<span class="number">2</span>, <span class="number">53</span>);</div><div class="line"><span class="keyword">var</span> START = END - <span class="number">100</span>;</div><div class="line"><span class="keyword">var</span> count = <span class="number">0</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = START; i &lt;= END; i++) &#123;</div><div class="line">	count++;</div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(count);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">boom</div></pre></td></tr></table></figure>
+<p>it goes into a infinite loop<br>2^53 is the highest possible number in JS<br>2^53+1 gives 2^53(never become larger than it)</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> ary = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>];</div><div class="line">ary[<span class="number">10</span>] = <span class="number">10</span>;</div><div class="line">ary.filter(<span class="function"><span class="keyword">function</span>(<span class="params">x</span>) </span>&#123; <span class="keyword">return</span> x === <span class="literal">undefined</span>; &#125;);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[]</div></pre></td></tr></table></figure>
+<p>Array.prototype.filter is not invoked for the missing elements<br>filter()</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> two = <span class="number">0.2</span>;</div><div class="line"><span class="keyword">var</span> one = <span class="number">0.1</span>;</div><div class="line"><span class="keyword">var</span> eight = <span class="number">0.8</span>;</div><div class="line"><span class="keyword">var</span> six = <span class="number">0.6</span>;</div><div class="line">[two - one == one, eight - six == two]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[true, false]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">eight - six</div><div class="line">0.20000000000000007</div><div class="line">two - one</div><div class="line">0.1</div></pre></td></tr></table></figure>
+<p>JS does not have precision(精确的) math, even though sometimes it work correctly</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">showCase</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">	<span class="keyword">switch</span>(value) &#123;</div><div class="line">        <span class="keyword">case</span> <span class="string">'A'</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'Case A'</span>);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> <span class="string">'B'</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'Case B'</span>);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> <span class="literal">undefined</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'undefined'</span>);</div><div class="line">        <span class="keyword">default</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'Do not know!'</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">showCase(<span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">'A'</span>));</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Do not know!</div></pre></td></tr></table></figure>
+<p>switch uses === internally<br>new String(x) !== x</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">showCase2</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">	<span class="keyword">switch</span>(value) &#123;</div><div class="line">        <span class="keyword">case</span> <span class="string">'A'</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'Case A'</span>);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> <span class="string">'B'</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'Case B'</span>);</div><div class="line">        <span class="keyword">case</span> <span class="literal">undefined</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'undefined'</span>);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">        <span class="keyword">default</span>:</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">'Do not know!'</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">showCase2(<span class="built_in">String</span>(<span class="string">'A'</span>))</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Case A</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">String(&quot;B&quot;)</div><div class="line">&quot;B&quot;</div><div class="line">String(1)</div><div class="line">&quot;1&quot;</div></pre></td></tr></table></figure>
+<p>String does not create an object but does return a string<br>typeof String(1) === “string”</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">isOdd</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> num % <span class="number">2</span> == <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">isEven</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> num % <span class="number">2</span> == <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">isSane</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> isEven(num) || isOdd(num);</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> values = [<span class="number">7</span>, <span class="number">4</span>, <span class="string">'13'</span>, <span class="number">-9</span>, <span class="literal">Infinity</span>];</div><div class="line">values.map(isSane);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[true, true, true, false, false]</div></pre></td></tr></table></figure>
+<p>Infinity % 2 gives NaN<br>-9 % 2 gives -1<br>modulo operator(模运算符) keeps sign so it’s result is only reliable compared to 0</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">parseInt(3, 8)</div><div class="line">parseInt(3, 2)</div><div class="line">parseInt(3, 0)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">3</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">parseInt(3, 8)</div><div class="line">3</div><div class="line">parseInt(3, 2)</div><div class="line">NaN</div><div class="line">parseInt(3, 0)</div><div class="line">3</div></pre></td></tr></table></figure>
+<p>3 does not exist in base 2, so NaN<br>parseInt(3, 0) parseInt will consider a bogus radix(考虑伪造一个基数) and assume you meant 10</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Array.isArray( Array.prototype )</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">true</div></pre></td></tr></table></figure>
+<p>Array.prototype is an Array</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="number">0</span>];</div><div class="line"><span class="keyword">if</span> ([<span class="number">0</span>]) &#123;</div><div class="line">	<span class="built_in">console</span>.log(a == <span class="literal">true</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"wut"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div></pre></td></tr></table></figure>
+<p>[0] as a boolean is considered true<br>Alas<br>using it in the comparisions it gets converted in a different way and all goes to hell</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[] == []</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div></pre></td></tr></table></figure>
+<p>== is the spawn of satan(==是恶魔之卵？？？)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&apos;5&apos; + 3</div><div class="line">&apos;5&apos; - 3</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&quot;53&quot;, 2</div></pre></td></tr></table></figure>
+<p>Strings know about + and will use it<br>but they are ignoreant of -<br>int that case the strings get converted to numbers</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1 + - + + + - + 1</div><div class="line">2</div><div class="line">1 + - 1</div><div class="line">0</div><div class="line">1 + - + 1</div><div class="line">0</div><div class="line">1 + - + + 1</div><div class="line">0</div><div class="line">1 + - + + + - 1</div><div class="line">2</div><div class="line">1 + - + + + - + 1</div><div class="line">2</div></pre></td></tr></table></figure>
+<p>???</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> ary = <span class="built_in">Array</span>(<span class="number">3</span>);</div><div class="line">ary[<span class="number">0</span>] = <span class="number">2</span>;</div><div class="line">ary.map(<span class="function"><span class="keyword">function</span>(<span class="params">elem</span>) </span>&#123; <span class="keyword">return</span> <span class="string">'1'</span>; &#125;);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[&quot;1&quot;, empty × 2]</div></pre></td></tr></table></figure>
+<p>map is only invoked for elements of the Array which have been initialiazed</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">sideEffecting</span>(<span class="params">ary</span>) </span>&#123;</div><div class="line">	ary[<span class="number">0</span>] = ary[<span class="number">2</span>];</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params">a, b, c</span>) </span>&#123;</div><div class="line">	c = <span class="number">10</span>;</div><div class="line">	sideEffecting(<span class="built_in">arguments</span>);</div><div class="line">	<span class="keyword">return</span> a + b + c;</div><div class="line">&#125;</div><div class="line">bar(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">21</div></pre></td></tr></table></figure>
+<p>variables are tied to the arguments object<br>even not in the same scope<br>changing the variables changes arguments<br>changing arguments changes the local variables even</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">111111111111111110000</span>,</div><div class="line">	b = <span class="number">1111</span>;</div><div class="line">a + b</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">111111111111111110000</div></pre></td></tr></table></figure>
+<p>lack of precision for numbers in js affects both <strong>small</strong> and <strong>big</strong> numbers</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> x = [].reverse;</div><div class="line">x();</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">???</div></pre></td></tr></table></figure>
+<p>[].reverse will return this<br>when invoked without an explicit(明确的) receiver object it will default to the default this AKA window</p>
+<p>ES5???</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="built_in">Number</span>.MIN_VALUE</div><div class="line"><span class="number">5e-324</span></div><div class="line"><span class="built_in">Number</span>.MIN_VALUE &gt; <span class="number">0</span></div><div class="line"><span class="literal">true</span></div><div class="line">-<span class="built_in">Number</span>.MAX_VALUE</div><div class="line"><span class="number">-1.7976931348623157e+308</span></div><div class="line">-<span class="built_in">Number</span>.MAX_VALUE &gt; <span class="number">0</span></div><div class="line"><span class="literal">false</span></div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1 &lt; 2 &lt; 3</div><div class="line">true</div><div class="line">3 &lt; 2 &lt; 1</div><div class="line">true</div></pre></td></tr></table></figure>
+<p>true gets intified and is 1<br>false gets intified and become 0</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// the most classic wtf</div><div class="line">2 == [[[2]]]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">true</div></pre></td></tr></table></figure>
+<p>both objects get converted to strings and in both cases the resulting string is “2”</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="number">3.</span>toString()</div><div class="line"><span class="number">3.</span>.toString()</div><div class="line"><span class="number">3.</span>..toString()</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">error</div><div class="line">&quot;3&quot;</div><div class="line">error</div></pre></td></tr></table></figure>
+<p>3.x is a valid syntax to define “3” with a mantissa(尾数) of x<br>toString is not a valid number, but the empty string is<br>???</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> x = y = <span class="number">1</span>;</div><div class="line">&#125;)();</div><div class="line"><span class="built_in">console</span>.log(y);</div><div class="line"><span class="built_in">console</span>.log(x);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1</div><div class="line">error</div></pre></td></tr></table></figure>
+<p>y is an automatic global, not a function local one</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="regexp">/123/</span>,</div><div class="line">	b = <span class="regexp">/123/</span>;</div><div class="line">a == b;</div><div class="line">a === b;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div><div class="line">false</div></pre></td></tr></table></figure>
+<p>Per spec Two regular expression literals in a program evaluate to regular expression objects that never compare as === to each other even if the two literals’ contents are identical.<br>同一个程序内的正则表达式永不使用===相互比较，尽管二者内容一样</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</div><div class="line">    b = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</div><div class="line">    c = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>]</div><div class="line">a ==  b</div><div class="line">a === b</div><div class="line">a &gt;   c</div><div class="line">a &lt;   c</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div><div class="line">false</div><div class="line">false</div><div class="line">true</div></pre></td></tr></table></figure>
+<p>Arrays are compared lexicographically with &gt; and &lt;, but not with == and ===</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = &#123;&#125;, b = <span class="built_in">Object</span>.prototype;</div><div class="line">[a.prototype === b, <span class="built_in">Object</span>.getPrototypeOf(a) === b]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div><div class="line">true</div></pre></td></tr></table></figure>
+<p>Functions have a prototype property but other objects don’t<br>a.prototype is undefined<br>Every Object instead has an internal property accessible via Object.getPrototypeOf</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="keyword">var</span> a = f.prototype, b = <span class="built_in">Object</span>.getPrototypeOf(f);</div><div class="line">a === b</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div></pre></td></tr></table></figure>
+<p>f.prototype is the object that will become the parent of any objects created with new f<br>Object.getPrototypeOf returns the parent in the inheritance hierarchy</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123; &#125;</div><div class="line"><span class="keyword">var</span> oldName = foo.name;</div><div class="line">foo.name = <span class="string">"bar"</span>;</div><div class="line">[oldName, foo.name]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[&quot;foo&quot;, &quot;foo&quot;]</div></pre></td></tr></table></figure>
+<p>name is a read only property</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1 2 3&quot;.replace(/\d/g, parseInt)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&quot;1 NaN 3&quot;</div></pre></td></tr></table></figure>
+<p>String.prototype.replace invokes the callback function with multiple arguments where the first is the match<br>then there is one argument for each capturing group<br>then there is the offset of the matched substring<br>finally the original string itself<br>parseInt will be invoked with arguments [1, 0], [2, 2], [3, 4]<br>???</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="keyword">var</span> parent = <span class="built_in">Object</span>.getPrototypeOf(f);</div><div class="line">f.name</div><div class="line">parent.name</div><div class="line"><span class="keyword">typeof</span> <span class="built_in">eval</span>(f.name)</div><div class="line"><span class="keyword">typeof</span> <span class="built_in">eval</span>(parent.name)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&quot;f&quot;</div><div class="line">&quot;Empty&quot;</div><div class="line">&quot;function&quot;</div><div class="line">error</div></pre></td></tr></table></figure>
+<p>The function prototype object is defined somewhere, has a name, can be invoked<br>but it is not in the current scope</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> lowerCaseOnly = <span class="regexp">/^[a-z]+$/</span>;</div><div class="line">[lowerCaseOnly.test(<span class="literal">null</span>), lowerCaseOnly.test()]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[true, true]</div></pre></td></tr></table></figure>
+<p>the argument is converted to a string with the abstract ToString operation<br>it is “null” and “undefined”</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">[,,,].join(<span class="string">", "</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&quot;, , &quot;</div></pre></td></tr></table></figure>
+<p>JS allows a trailing comma(尾随分隔符) when defining arrays<br>It is an array of three undefined<br>join()</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">var a = &#123;class: &quot;Animal&quot;, name: &apos;Fido&apos;&#125;;</div><div class="line">a.class</div></pre></td></tr></table></figure>
+<p>It depends on brower<br>class is a reserved word<br>accepted as a property name by Chrome,Firefox and Opera<br>fail in IE<br>accept most reserved words (int, private, throws etc) as variable names<br>class is verboten(禁止的)</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="string">"epoch"</span>)</div></pre></td></tr></table></figure>
+<p>a instanceof Date is true, but invalid<br>time is internally kept as a Number<br>in this case it is a NaN</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="built_in">Function</span>.length,</div><div class="line">	b = <span class="keyword">new</span> <span class="built_in">Function</span>().length</div><div class="line">a === b</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div></pre></td></tr></table></figure>
+<p>Function.length is defined to be 1<br>the length property of the Function prototype object is defined to be 0</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="built_in">Date</span>(<span class="number">0</span>);</div><div class="line"><span class="keyword">var</span> b = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="number">0</span>);</div><div class="line"><span class="keyword">var</span> c = <span class="keyword">new</span> <span class="built_in">Date</span>();</div><div class="line">[a === b, b === c, a === c]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[false, false, false]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">a</div><div class="line">&quot;Thu Jan 18 2018 18:25:18 GMT+0800 (中国标准时间)&quot;</div><div class="line">b</div><div class="line">Thu Jan 01 1970 08:00:00 GMT+0800 (中国标准时间)</div><div class="line">c</div><div class="line">Thu Jan 18 2018 18:25:18 GMT+0800 (中国标准时间)</div></pre></td></tr></table></figure>
+<p>When it is invoked as a function, it returns a String representation of the current time<br>When Date is invoked as a constructor it returns an object relative to the epoch(Jan 01 1970)<br>When the argument is missing it returns the current date</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> min = <span class="built_in">Math</span>.min(), max = <span class="built_in">Math</span>.max()</div><div class="line">min &lt; max</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">false</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">min</div><div class="line">Infinity</div><div class="line">max</div><div class="line">-Infinity</div></pre></td></tr></table></figure>
+<p>Math.min returns +Infinity when supplied an empty argument list</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">captureOne</span>(<span class="params">re, str</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> match = re.exec(str);</div><div class="line">  <span class="keyword">return</span> match &amp;&amp; match[<span class="number">1</span>];</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> numRe  = <span class="regexp">/num=(\d+)/ig</span>,</div><div class="line">    wordRe = <span class="regexp">/word=(\w+)/i</span>,</div><div class="line">    a1 = captureOne(numRe,  <span class="string">"num=1"</span>),</div><div class="line">    a2 = captureOne(wordRe, <span class="string">"word=1"</span>),</div><div class="line">    a3 = captureOne(numRe,  <span class="string">"NUM=2"</span>),</div><div class="line">    a4 = captureOne(wordRe,  <span class="string">"WORD=2"</span>);</div><div class="line">[a1 === a2, a3 === a4]</div></pre></td></tr></table></figure>
+<p>Regular expressions in JavaScript if defined using the /g flag will carry a state across matches, even if they are actually used on different strings (the lastIndex property). This means a3 will be null as the regular expression was applied starting from the index of the last matched string, even if it was a different one.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="string">"2014-03-19"</span>),</div><div class="line">    b = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="number">2014</span>, <span class="number">03</span>, <span class="number">19</span>);</div><div class="line">[a.getDay() === b.getDay(), a.getMonth() === b.getMonth()]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[false, false]</div></pre></td></tr></table></figure>
+<p>JavaScript inherits 40 years old design from C: days are 1-indexed in C’s struct tm, but months are 0 indexed. In addition to that, getDay returns the 0-indexed day of the week, to get the 1-indexed day of the month you have to use getDate, which doesn’t return a Date object.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="string">'http://giftwrapped.com/picture.jpg'</span>.match(<span class="string">'.gif'</span>)) &#123;</div><div class="line">  <span class="string">'a gif file'</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">  <span class="string">'not a gif file'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&quot;a gif file&quot;</div></pre></td></tr></table></figure>
+<p>String.prototype.match silently converts the string into a regular expression, without escaping it, thus the ‘.’ becomes a metacharacter matching ‘/‘.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">a</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> a;</div><div class="line">    <span class="keyword">return</span> a;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params">a</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> a = <span class="string">'bye'</span>;</div><div class="line">    <span class="keyword">return</span> a;</div><div class="line">&#125;</div><div class="line">[foo(<span class="string">'hello'</span>), bar(<span class="string">'hello'</span>)]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">[&quot;hello&quot;, &quot;bye&quot;]</div></pre></td></tr></table></figure>
+<p>Variabled declarations are hoisted, but in this case since the variable exists already in the scope, they are removed altogether. In bar() the variable declaration is removed but the assignment remains, so it has effect.</p>
+<p>参考：<a href="http://javascript-puzzlers.herokuapp.com/" target="_blank" rel="external">http://javascript-puzzlers.herokuapp.com/</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/前端/">前端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/javascript/">javascript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/01/20/js-xue-xi-bi-ji-bian-liang-zuo-yong-yu/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">js学习笔记——变量作用域</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2018/01/19/js-xue-xi-bi-ji-this-guan-jian-zi/">
+                        <span class="hidden-mobile">js学习笔记——this关键字</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "javascript-puzzlers&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

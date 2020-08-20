@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>Git子模块功能使用实践 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2019-05-21 20:21">
+                    2019年5月21日 晚上
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    3.6k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    39
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>关于一次使用git子模块功能备份hexo主题文件的记录</p>
+<a id="more"></a>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>整个事情源于某天心血来潮又写了篇博客，当准备使用hexo发表时，突然想到一个问题<code>之前虽然做到对于博客项目的git备份了，但是最近新换的主题配置修改也备份了吗？</code>，有点像强迫症出门后思考房门有没有锁好的感觉。</p>
+<p>背景是这样的：最初我刚接触hexo的时候，觉得发现了宝贝，它是个不错的静态博客生成器，风格偏极客风，虽说是博客工具，但要拿给不会技术的人可能用起来还比较蹩脚，因为其虽然声称使用简便，只需要快速地搭建环境，敲敲命令，就可以在网页上展现出漂亮的个人博客网站来，但其搭建环境基于Node.js，命令又依赖于git，还得把本地的博客源文件编译成浏览器可解读的静态文件发布到远程git仓库，还得使用支持pages服务的git仓库，比如github的github pages或coding pages。所以我当初刚接触的时候，对其原理也是一知半解，仅停留在”会用“程度，但随着时间的推移，免不了发生一些其他变动，比如换电脑，这时候我就发现，如果没有对本地博客项目进行版本库的管理和备份，那么只要硬盘上的博客项目文件夹出现丢失或者换电脑，就麻烦了。当然，换电脑还算好，只要用优盘把旧电脑里的文件夹拷贝过去，在新电脑搭建相同的环境，就能恢复使用了，但这方法不够优雅，不够geek。于是就在网上查hexo博客备份的方法，最后结合查到的方式和自己的推敲尝试，记录了一篇<a href="https://www.h2mes.com/2018/09/03/wo-shi-ru-he-bei-fen-bo-ke-de/">我是如何备份博客的</a></p>
+<h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>但今天再看，当时只解决了博客“根项目”的保存，最近换了新的主题，主题的配置文件改了一大通，当然就是根据自己进行的个性化修改，突然想到，主题项目是博客项目themes文件夹的一个子项目，是进到themes目录，通过<code>git clone</code>下载到本地的另一个git项目。问题来了，git项目中嵌套git项目，事情看上去不那么简单。好在之前就了解过<code>子项目git submodule</code>的概念，知道这是那块的东西，但当时刚接触<code>子项目</code>的时候觉得有点复杂，就没再理会，现在发现逃不过了，这是最好也是最恰当的解决方案，所以再次开始了搜查。</p>
+<p>先是根据猜想结合自己使用git的经验进行尝试</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>首先，理了一下思路，新下载的<code>hexo-theme-matery</code>项目是不应该直接划为子模块的，因为它的远程关联是github中原作者的项目，我对其的修改不可能直接提交到人家那里，也提交不上去，所以我首先应该有一份自己的关于<code>hexo-theme-matery</code>项目的拷贝，无论是本地git还是远程仓库，都是自己的，所以先进入到<code>themes/hexo-theme-matery</code>目录，把git初始化删掉（后来想到这里其实不用直接把git初始化删掉，只要把远程仓库关联改成我自己的就可以了，因为在本地git的提交都是我自己的，只要同步到自己的远程仓库就可以了）</p>
+<p>删除git初始化（使一个项目脱离git的管理）<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">rm -rf ./.git</div></pre></td></tr></table></figure></p>
+<p>然后再重新初始化<code>themes/hexo-theme-matery</code>目录成为一个git项目，并关联我远程建的空项目</p>
+<p>由于远端建的是空项目，所以可以毫无冲突的直接push并建立默认分支设置（加参数 -u）<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd hexo-theme-matery</div><div class="line">git init .</div><div class="line">git add .</div><div class="line">git commit -m &apos;initial matery theme as a divided git project&apos;</div><div class="line">git remote add origin git@git.coding.net:daemonG/my-hexo-theme-matery.git</div><div class="line">git push -u origin master</div></pre></td></tr></table></figure></p>
+<p>接下来要建立子项目关联了，参考了网上的一篇文章<a href="https://juejin.im/post/5c2e22fcf265da615d72c596" target="_blank" rel="external">在 hexo 中使用 git submodules 管理主题</a></p>
+<p>照猫画虎地进行了如下的操作</p>
+<p>按照我对网上文章的理解，以为是通过如下命令，把某个文件夹变成一个项目并命名子项目为theme-matery<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd hexo-theme-matery</div><div class="line">git add submodule . theme-matery</div></pre></td></tr></table></figure></p>
+<p>但发现提示错误，发现是命令的参数顺序错了，于是改正为</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule add . theme-matery</div></pre></td></tr></table></figure>
+<p>还不对，提示子模块必须是一个绝对路径的目录，修改为</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule add ./ theme-matery</div></pre></td></tr></table></figure>
+<p>可以了，但发现好像不对，子模块添加成功的提示告诉我，我敲的这个命令是在当前目录添加了一个theme-matery目录，内容是当前目录的所有，这并不是我想要的，于是准备删掉这次操作的产物</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule remove theme-matery</div></pre></td></tr></table></figure>
+<p>提示并没有remove这个命令，并提示了我有哪些关于子模块的命令可用，于是</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule deinit</div></pre></td></tr></table></figure>
+<p>提示需要对全部文件进行子模块撤销</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule deinit --all</div></pre></td></tr></table></figure>
+<p>提示新建立的子模块已经有了git修改记录，如果此时要撤销子模块，需要进行强制撤销操作</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule deinit --all -f</div></pre></td></tr></table></figure>
+<p>这样发现，新建的<code>theme-matery</code>文件夹消失了，但还残留一个<code>.gitmodules</code>文件，这是git子模块的描述文件，既然刚才是一次失败的尝试，这个也删掉</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">rm -rf .gitmodules</div></pre></td></tr></table></figure>
+<p>终于恢复如初了，再来，继续尝试其他方法。既然刚才的确生成了子模块描述文件和对应的子项目，那么方向不错，只是生成的位置和预期不符，于是我退到项目根路径重新操作</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd ..</div><div class="line">cd ..</div><div class="line">git submodule add themes/hexo-theme-matery/ theme-matery</div></pre></td></tr></table></figure>
+<p>同样提示了刚才犯的一个错误，指定的子模块要以绝对路径给出</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule add ./themes/hexo-theme-matery/ theme-matery</div></pre></td></tr></table></figure>
+<p>这回的确在项目根路径生成子模块了，但也不对，原来命令中的最后一个参数是最终生成的子模块文件夹名称，而不是对于子模块定义的别名，我理解错了，所以还得删掉重来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git rm theme-matery</div><div class="line">git rm theme-matery -f</div><div class="line">git rm .gitmodules</div></pre></td></tr></table></figure>
+<p>这我就迷茫了，到底应该怎么添加子模块呢，再看网上查的文章，里面举的例子是把一个远程git项目下载到根项目中并作为子模块，前提是我原来只有一个git根项目，然后再添加一个远程git项目到本地的git项目的一个子文件夹作为一个子模块存在，下载+子模块初始化两步合并操作，但我的情况是，我本地已经是一个git根项目里套着一个别人的git项目了，想在本地操作，把这个子git项目变成根git项目的子模块。</p>
+<p>emmmmm…</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>灵光一闪，有了办法</p>
+<p>反正刚才已经把本地的主题项目同步到远端新建的空项目了，所以也就是我修改过配置文件的主题项目已经在远端有了备份，所以我可以把本地的删掉，然后按照参考文章里的做法，通过下载远端项目到本地并初始化为子模块的方式进行操作了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule add git@git.coding.net:daemonG/my-hexo-theme-matery.git themes/my-hexo-theme-matery</div></pre></td></tr></table></figure>
+<p>完美，效果是我想要的</p>
+<p>接下来还有提交的问题，我已经预料到这个问题，虽然是子模块，但肯定也存在提交的问题，毕竟是两个独立的git项目，只是存在父子关联关系，应该存在<code>单独提交父项目</code>、<code>单独提交子项目</code>和<code>同时提交父项目和子项目</code>三种情况</p>
+<p>先试一下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git add .</div><div class="line">git commit -m &apos;add theme/matery as submodule&apos;</div></pre></td></tr></table></figure>
+<p>在根目录发现这样提交并不会提交子模块的修改</p>
+<p>难道是子模块的修改没被git管理到？</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git submodule add .</div><div class="line">git add . --recursive</div></pre></td></tr></table></figure>
+<p>呃，这都是无用操作</p>
+<p>再试了一下参考文章里的<code>git commit -am &#39;update config of submodule&#39;</code>，也不行</p>
+<p>感到无助的时候回归官方文档<a href="https://git-scm.com/book/zh/v1/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97" target="_blank" rel="external">Git 工具 - 子模块</a>和另一篇文章的参考<a href="https://www.jianshu.com/p/384c73fe173f" target="_blank" rel="external">Git Submodule的使用</a>，有一句说法醍醐灌顶</p>
+<blockquote>
+<p>主git仓库中存在.gitmodules文件，它记录了submodule的基本信息。例如remote地址。<br>同时在某处记录了主git仓库所用的submodule的commit号。<br>主git仓库并不同步submodule中的所有代码，而是同步其remote地址和commit号，每个clone都是根据这两个信息自行到remote地址获取到该commit版本的内容。所以，如果你要更新submodule必须做上面的操作步骤。而你操作完成后，你的git仓库中submodule的commit号得到更新。</p>
+</blockquote>
+<p>所以，根项目想要把子模块的修改一并作为主项目的一部分进行提交，需要察觉到子模块中的commit号改变</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd ..</div><div class="line">cd ..</div><div class="line">git add .</div><div class="line">git commit -m &apos;update config of submodule&apos;</div></pre></td></tr></table></figure>
+<p>这样再回到主项目，子模块的提交就一并提交到主项目的远程了，当然子项目还是“自治”的，子模块的提交还是子模块的提交，它也是一个独立的git项目</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然啰嗦了这么一大篇，主要是为了再现当时的各种失败尝试，这样在日后遇到问题时能够想起当时的思路。但也免不了此时的结论就是最佳的方案，可能还有一些操作是错误的，或者存在隐患的，关于git子模块的使用还在进一步的实践和学习中。</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>刚做了这样的尝试，博客就崩了，发布上去直接白屏，经过多方排查，想到是我重新命名了主题项目的名称，而整个hexo的设计都是约定优于配置的，所以改动主题项目名，必定导致配置上对不上，出现报错，并且还不好定位到错误，还好想到了是这里的问题，所以把根项目配置文件中theme的配置项改为修改后的名称，博客恢复正常了。</p>
+<h3 id="子模块常用命令"><a href="#子模块常用命令" class="headerlink" title="子模块常用命令"></a>子模块常用命令</h3><h4 id="改动子模块"><a href="#改动子模块" class="headerlink" title="改动子模块"></a>改动子模块</h4><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd 子模块目录</div><div class="line">git add .</div><div class="line">git commit -m &apos;像正常修改提交git项目一样操作&apos;</div><div class="line">git push</div><div class="line">cd 父模块目录</div><div class="line">git add .</div><div class="line">git commit -m &apos;提交父模块中子模块的改动&apos;</div><div class="line">git push</div></pre></td></tr></table></figure>
+<p>核心步骤：进到子模块目录进行提交，再回到父模块项目再次提交</p>
+<h4 id="更新子模块"><a href="#更新子模块" class="headerlink" title="更新子模块"></a>更新子模块</h4><h5 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h5><p>在父模块目录遍历更新其下的子模块</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd 父模块目录</div><div class="line">git submodule foreach git pull</div></pre></td></tr></table></figure>
+<h5 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h5><p>进入到子模块目录中正常更新</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd 子模块</div><div class="line">git pull</div></pre></td></tr></table></figure>
+<h4 id="下载包含子模块的git项目"><a href="#下载包含子模块的git项目" class="headerlink" title="下载包含子模块的git项目"></a>下载包含子模块的git项目</h4><p>递归下载，同时下载父模块git项目并递归检查其包含的子模块git项目一并下载</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git clone 项目地址 --recursive</div></pre></td></tr></table></figure>
+<p>先下载父模块项目，下载后如果父项目包含子模块则会有对应子项目名称的空目录，进入子模块目录初始化子模块</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">git clone 项目地址</div><div class="line">cd 子模块目录</div><div class="line">git submodule init</div><div class="line">git submodule update</div></pre></td></tr></table></figure>
+<p><code>git submodule update</code>用以确保子模块更新到最新和下载完整，比如使用递归下载<code>git clone 项目地址 --recursive</code>时下载不全的情况</p>
+<h4 id="移除子模块"><a href="#移除子模块" class="headerlink" title="移除子模块"></a>移除子模块</h4><p>git不支持直接删除子模块</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd 子模块</div><div class="line">git rm --cached .</div><div class="line">cd 父模块</div><div class="line">rm -rf 子模块</div><div class="line">rm .gitmodules</div></pre></td></tr></table></figure>
+<p><del>待补充</del></p>
+<p><del>总结hexo的优点和缺点</del></p>
+<h2 id="hexo优缺点"><a href="#hexo优缺点" class="headerlink" title="hexo优缺点"></a>hexo优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>高度可定制化</li>
+<li>支持二次开发</li>
+<li>开源，具备维护性并可参与到功能开发中</li>
+<li>满足用户极客心理的诉求</li>
+<li>主题拓展性强，有活跃的群体在丰富着可用的主题</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>不稳定，区别于知乎、简书这样的商业产品，具备专业团队保证使用的稳定性</li>
+<li>使用基于配置，需要对配置规则较熟悉，否则会产生预料之外的错误，并且不易定位到</li>
+<li>依赖于git、git远程仓库和pages服务，如果想通过自己的域名访问博客还依赖域名服务（以及域名租用的费用）</li>
+</ul>
+<h3 id="使用建议"><a href="#使用建议" class="headerlink" title="使用建议"></a>使用建议</h3><h4 id="对博客源项目进行git独立项目备份"><a href="#对博客源项目进行git独立项目备份" class="headerlink" title="对博客源项目进行git独立项目备份"></a>对博客源项目进行git独立项目备份</h4><p>因为使用hexo-deployer发布到远端git仓库的是对源项目进行编译后的文件，与原项目有着完全不同的目录格式，一旦源项目丢失，无法通过已经发布的远程git项目逆向生成</p>
+<h4 id="对使用到的主题项目进行独立项目备份"><a href="#对使用到的主题项目进行独立项目备份" class="headerlink" title="对使用到的主题项目进行独立项目备份"></a>对使用到的主题项目进行独立项目备份</h4><p>因为主题项目一般都是独立的git项目，也会独立的更新功能，如果不能很好的将其作为子模块和博客项目关联并对其进行独立git项目备份的话，在换电脑或主题项目变更后，很难保留用户自己的修改</p>
+<h4 id="对每一次的博客变动在本地发布测试通过后再向远端部署"><a href="#对每一次的博客变动在本地发布测试通过后再向远端部署" class="headerlink" title="对每一次的博客变动在本地发布测试通过后再向远端部署"></a>对每一次的博客变动在本地发布测试通过后再向远端部署</h4><p>因为hexo是基于配置约定的，所以有时用户会错误的使用一些命令或配置修改，会导致hexo在部署到远端的时候发生错误，而产生覆盖远端发布文件，导致博客不可访问的问题。所以对待hexo博客要像对待一个web项目一样经过本地测试，命令如下（s为server的首字母标识）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hexo s</div></pre></td></tr></table></figure>
+<p>如果默认的4000端口被占用，可通过添加<code>-p</code>参数指定其他端口</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hexo s -p 4001</div></pre></td></tr></table></figure>
+<p>经本地验证无误，符合改动预期后再发布远程</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hexo g -d</div></pre></td></tr></table></figure>
+<h4 id="其他情况"><a href="#其他情况" class="headerlink" title="其他情况"></a>其他情况</h4><p>还有可能导致博客无法正常访问的原因可能是pages服务配置不正确，或者域名不可用，域名过期等原因，需要查阅网上其他人的解决方案</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://segmentfault.com/a/1190000003076028" target="_blank" rel="external">使用Git Submodule管理子模块</a></li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/开发/">开发</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/git/">git</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/05/21/ecmascript6-yi-shu-du-hou-gan/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">《ECMAScript6入门》读后感</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2019/05/07/yong-python-sheng-cheng-zhu-zhuang-tu-zhe-xian-tu-bing-zhuang-tu-lai-tong-ji-zi-ji-de-shou-ji-hua-fei/">
+                        <span class="hidden-mobile">用Python生成柱状图、折线图、饼状图来统计自己的手机话费</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Git子模块功能使用实践&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

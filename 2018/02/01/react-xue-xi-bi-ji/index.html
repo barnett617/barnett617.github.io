@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>React教程之快速上手篇 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2018-02-01 15:32">
+                    2018年2月1日 下午
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    2.5k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    29
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>React官方教程系列之快速上手篇</p>
+<a id="more"></a>
+<h3 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h3><p>React官网的Quick Start提供了一个在线编辑器CodePen，里面提供了一个react的最小配置示例，即</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">ReactDOM.render(</div><div class="line">  &lt;h1&gt;Hello, World&lt;<span class="regexp">/h1&gt;,</span></div><div class="line"><span class="regexp">	document.getElementById('root')</span></div><div class="line"><span class="regexp">);</span></div></pre></td></tr></table></figure>
+<p>这个js文件将会把html文件渲染出Hello，World这个标题</p>
+<p>html文件结构如下</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"root"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>接下来将探析React应用的构建块部分：元素、组件</p>
+<p>一旦掌握，便可通过碎小的可复用块创造复杂的应用</p>
+<h3 id="关于React于JavaScript的关系"><a href="#关于React于JavaScript的关系" class="headerlink" title="关于React于JavaScript的关系"></a>关于React于JavaScript的关系</h3><p>React是一个JavaScript库（library）</p>
+<p>官网给出的建议是在学习React前确保自己的JavaScript有所理解，参照另一篇博文<a href="https://www.h2mes.com/2018/02/01/js%E7%9F%A5%E8%AF%86%E5%B7%A9%E5%9B%BA/">Refresh your JavaScript Knowledge</a></p>
+<p>我们在例子里也用到了一些ES6语法。我们试图保守地用它，因为它还近乎崭新，但我们鼓励你熟悉一下箭头函数、类、模板字、let和const语句。你可以使用<a href="https://babeljs.io/repl/#?presets=react&code_lz=MYewdgzgLgBApgGzgWzmWBeGAeAFgRgD4AJRBEAGhgHcQAnBAEwEJsB6AwgbgChRJY_KAEMAlmDh0YWRiGABXVOgB0AczhQAokiVQAQgE8AkowAUPGDADkdECChWeASl4AlOMOBQAIgHkAssp0aIySpogoaFBUQmISdC48QA" target="_blank" rel="external">Babel REPL</a>来检查ES6代码编译成什么样</p>
+<h3 id="JSX介绍"><a href="#JSX介绍" class="headerlink" title="JSX介绍"></a>JSX介绍</h3><p>考虑这个变量声明：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">const element = &lt;h1&gt;Hello, world!&lt;/h1&gt;;</div></pre></td></tr></table></figure>
+<p>这个搞笑的标签语法既不是一个字符串也不是HTML</p>
+<p>它叫做JSX，并且它是JavaScript的一种语法拓展。我们推荐你在React使用它来描述UI看上去应该的样子。JSX可能使你想起模板语言，但它完全来自JavaScript的强大</p>
+<p>JSX生产React“元素”。我们将在下一部分探索把它们渲染成DOM。在下面你会发现JSX必备基础来使你开始</p>
+<h4 id="为什么用JSX"><a href="#为什么用JSX" class="headerlink" title="为什么用JSX"></a>为什么用JSX</h4><p>React拥抱渲染逻辑本质上是加上其他的UI逻辑这样的事实：事件如何处理，状态如何改变，还有数据如何被准备好用作展示</p>
+<p>不是通过把标记和逻辑放在不同的文件中这样人为的分离技术，取而代之React分离聚焦在两个称作组件的松耦合单元（原文：React separates concerns with loosely coupled units called “components” that contain both.）我们会在后面的部分回到组件，但如果你还对于把标记放进JavaScript感到不舒服，<a href="https://www.youtube.com/watch?v=x7cQ3mrcKaY" target="_blank" rel="external">这段谈话</a>可能会使你信服。</p>
+<p>React并不一定要使用JSX，但大多数人发现这在他们处理JavaScript代码中的UI时，JSX像一个可视化目标一样帮到他们。它也允许React去展示更多有用的错误和警告信息</p>
+<p>有了这些方法，让我们开始吧！</p>
+<h4 id="在JSX中嵌入表达式"><a href="#在JSX中嵌入表达式" class="headerlink" title="在JSX中嵌入表达式"></a>在JSX中嵌入表达式</h4><p>你可以在JSX中嵌入任何JavaScript表达式，通过包裹在大括号内</p>
+<p>例如：2 + 2、user.firstName和formatName(user)都是有效的表达式：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">formatName</span>(<span class="params">user</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> user.firstName + <span class="string">' '</span> + user.lastName;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> user = &#123;</div><div class="line">  firstName: <span class="string">'Harper'</span>,</div><div class="line">  lastName: <span class="string">'Perez'</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">const</span> element = (</div><div class="line">  &lt;h1&gt;</div><div class="line">    Hello, &#123;formatName(user)&#125;!</div><div class="line">  &lt;<span class="regexp">/h1&gt;</span></div><div class="line"><span class="regexp">);</span></div><div class="line"><span class="regexp"></span></div><div class="line"><span class="regexp">ReactDOM.render(</span></div><div class="line"><span class="regexp">  element,</span></div><div class="line"><span class="regexp">  document.getElementById('root')</span></div><div class="line"><span class="regexp">);</span></div></pre></td></tr></table></figure>
+<p>我们为了可读性把JSX拆分成多行。虽然不是必须的，当这样做时，我们还是建议用括号包裹起来以避免<a href="https://stackoverflow.com/questions/2846283/what-are-the-rules-for-javascripts-automatic-semicolon-insertion-asi" target="_blank" rel="external">自动分号</a>的陷阱</p>
+<h4 id="JSX也是表达式"><a href="#JSX也是表达式" class="headerlink" title="JSX也是表达式"></a>JSX也是表达式</h4><p>在编译之后，JSX表达式成为常规的JavaScript函数调用和评估</p>
+<p>这意味着你可以在if语句和for循环内使用JSX，把它赋值给变量，接受它作为参数，还有从函数返回它</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getGreeting</span>(<span class="params">user</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (user) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, &#123;formatName(user)&#125;!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, Stranger.<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="为JSX指定属性"><a href="#为JSX指定属性" class="headerlink" title="为JSX指定属性"></a>为JSX指定属性</h4><p>你可能使用引号来指定字符串文字作为属性：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">tabIndex</span>=<span class="string">"0"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</div></pre></td></tr></table></figure>
+<p>你也可能使用花括号来在属性内嵌入JavaScript表达式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">const element = &lt;img src=&#123;user.avatarUrl&#125;&gt;&lt;/img&gt;;</div></pre></td></tr></table></figure>
+<p>当向一个属性内嵌入JavaScript表达式时，不要在花括号外加引号。你应该使用引号（对字符串值）或花括号（对表达式），但不应该二者都用于属性</p>
+<blockquote>
+<p>警告：因为JSX比起HTML更像JavaScript，React DOM使用驼峰属性命名法取代HTML属性名称。例如，在JSX中，class变成className，tabindex变成tabIndex</p>
+</blockquote>
+<h4 id="为JSX指定子"><a href="#为JSX指定子" class="headerlink" title="为JSX指定子"></a>为JSX指定子</h4><p>如果一个标签是空的，你可能会立即用一个/&gt;关上它，像XML：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = <span class="xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;user.avatarUrl&#125;</span> /&gt;</span>;</span></div></pre></td></tr></table></figure>
+<p>JSX标签可能包含子：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = (</div><div class="line">  &lt;div&gt;</div><div class="line">    &lt;h1&gt;Hello!<span class="xml"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></div><div class="line">    &lt;h2&gt;Good to see you here.&lt;<span class="regexp">/h2&gt;</span></div><div class="line"><span class="regexp">  &lt;/</span>div&gt;</div><div class="line">);</div></pre></td></tr></table></figure>
+<h4 id="JSX避免注入攻击"><a href="#JSX避免注入攻击" class="headerlink" title="JSX避免注入攻击"></a>JSX避免注入攻击</h4><p>在JSX中嵌入用户输入是安全的</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> title = response.potentiallyMaliciousInput;</div><div class="line"><span class="keyword">const</span> element &lt;h1&gt;&#123;title&#125;&lt;<span class="regexp">/h1&gt;;</span></div></pre></td></tr></table></figure>
+<p>默认的，React DOM会在渲染之前转义嵌在JSX中的值。从而确保你永远不会注入任何写在你程序里不明确的东西。任何东西都会在渲染之前被转换为字符串。这避免了XSS攻击</p>
+<h4 id="JSX表示对象"><a href="#JSX表示对象" class="headerlink" title="JSX表示对象"></a>JSX表示对象</h4><p>Babel编译JSX为React.createElement()调用</p>
+<p>下面两个例子完全相同：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = (</div><div class="line">  &lt;h1 className=<span class="string">"greeting"</span>&gt;</div><div class="line">    Hello, world!</div><div class="line">  &lt;<span class="regexp">/h1&gt;</span></div><div class="line"><span class="regexp">);</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = React.createElement(</div><div class="line">  <span class="string">'h1'</span>,</div><div class="line">  &#123;<span class="attr">className</span>: <span class="string">'greeting'</span>&#125;,</div><div class="line">  <span class="string">'Hello world'</span></div><div class="line">);</div></pre></td></tr></table></figure>
+<p>React.createElement()实施了一些检查以帮助你写出无缺陷的代码，但会潜在创造一个如下的对象：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = &#123;</div><div class="line">  type: <span class="string">'h1'</span>,</div><div class="line">  props: &#123;</div><div class="line">    className: <span class="string">'greeting'</span>,</div><div class="line">    children: <span class="string">'Hello, world'</span></div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这些对象称为React元素。你可以把它们当作你想在屏幕上看到的东西的描述。React读取这些对象并使用它们去构造DOM并保持它们为最新的</p>
+<p>我们将会在下个部分探索渲染React元素为DOM</p>
+<blockquote>
+<p>Tip: 我们推荐你为你的编辑器选择使用<a href="http://babeljs.io/docs/editors" target="_blank" rel="external">Babel语言定义</a>，这样ES6和JSX就可以正确地高亮显示。（原文此处使用<a href="https://labs.voronianski.com/oceanic-next-color-scheme/" target="_blank" rel="external">Oceanic Next</a>颜色主题）</p>
+</blockquote>
+<h3 id="渲染元素"><a href="#渲染元素" class="headerlink" title="渲染元素"></a>渲染元素</h3><p>元素是React应用最小的构建块</p>
+<p>元素描述了你想在屏幕上看到的东西：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</div></pre></td></tr></table></figure>
+<p>不像浏览器DOM元素，React元素是纯文本对象，并且容易创建。React DOM关心更新DOM以匹配React元素</p>
+<blockquote>
+<p>有人可能会混淆元素一个更广为人知的概念——“组件”。我们将会介绍组件在下一部分。元素是组件的组成部分并且我们鼓励你跳读前阅读组件这个部分</p>
+</blockquote>
+<h4 id="把元素渲染为DOM"><a href="#把元素渲染为DOM" class="headerlink" title="把元素渲染为DOM"></a>把元素渲染为DOM</h4><p>让我们假设在你的HTML文件中的某个地方有一个<div></div></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">&lt;div id=<span class="string">"root"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></div></pre></td></tr></table></figure>
+<p>我们称其为DOM“根”节点，因为所以其内的节点都受管于React DOM</p>
+<p>仅用React构建的程序经常只有一个唯一的根DOM节点。如果你将React集成进一个已存在的应用，你可以有尽可能多的孤立的根DOM</p>
+<p>渲染一个React元素为一个根DOM节点，通过ReactDOM.render()：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, world<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</div><div class="line">ReactDOM.render(</div><div class="line">  element,</div><div class="line">  <span class="built_in">document</span>.getElementById(<span class="string">'root'</span>)</div><div class="line">);</div></pre></td></tr></table></figure>
+<h4 id="更新渲染的元素"><a href="#更新渲染的元素" class="headerlink" title="更新渲染的元素"></a>更新渲染的元素</h4><p>React元素是一成不变的。一旦你创建一个元素，你无法改变它的子或者属性。元素就像电影中的一帧：它展现了在以一个特定时间点的UI</p>
+<p>就我们现在所知，更新UI的唯一方式是创建一个新的元素，并把它传递给ReactDOM.render()</p>
+<p>考虑一下这个钟表滴答例子：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">tick</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> element = (</div><div class="line">    &lt;div&gt;</div><div class="line">      &lt;h1&gt;Hello, world!<span class="xml"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></div><div class="line">      &lt;h2&gt;</div><div class="line">        It is&#123;<span class="string">' '</span>&#125;</div><div class="line">        &#123;hew <span class="built_in">Date</span>().toLocaleTimeString()&#125;.</div><div class="line">      &lt;<span class="regexp">/h2&gt;</span></div><div class="line"><span class="regexp">    &lt;/</span>div&gt;</div><div class="line">  );</div><div class="line">  ReactDOM.render(</div><div class="line">    element,</div><div class="line">    <span class="built_in">document</span>.getElementById(<span class="string">'root'</span>)</div><div class="line">  );</div><div class="line">&#125;</div><div class="line"></div><div class="line">setInterval(tick, <span class="number">1000</span>);</div></pre></td></tr></table></figure>
+<p>它从<a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval" target="_blank" rel="external">setInterval()</a>的回调函数每秒调用一次ReactDOM.render()</p>
+<blockquote>
+<p>实际上，大多数React应用只调用一次ReactDOM.render()。在下一个部分我们将学习怎样把这样的代码装进状态组件。我们推荐你不要跳过话题，因为它们依赖于彼此。</p>
+</blockquote>
+<h4 id="React只更新必要的东西"><a href="#React只更新必要的东西" class="headerlink" title="React只更新必要的东西"></a>React只更新必要的东西</h4><p>React DOM会比较元素及其子元素与前一个状态的对比，只把必要的DOM更新为适用于所需的状态</p>
+<p>你可通过使用浏览器工具检查上一个例子来确认</p>
+<p>即使我们每一秒创建一个元素来描述整个UI树，但只有内容改变的文本节点通过React DOM获得更新</p>
+<p>在我们的实验中，思考UI如何根据给出的时刻而不是随着时间的推移进行改变，消除整个类的错误</p>
+<h3 id="组件和props"><a href="#组件和props" class="headerlink" title="组件和props"></a>组件和props</h3><p>组件使你将UI分离成独立的部分、可重用的碎片并隔离的考虑每一个碎片</p>
+<p>概念上讲，组件像是JavaScript的函数。它们接收任意的输入（称作props）并返回React元素来描述屏幕上发生了什么</p>
+<h4 id="功能组件和类组件"><a href="#功能组件和类组件" class="headerlink" title="功能组件和类组件"></a>功能组件和类组件</h4><p>定义一个组件最简单的方式就是写一个JavaScript函数：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Welcome</span>(<span class="params">props</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, &#123;props.name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个函数是一个有效的React组件，因为它接收了一个伴有数据的单一的props（表示属性）对象参数并返回了一个React元素。我们称这样的组件为函数组件，因为它们字面上是JavaScript函数</p>
+<p>你也可以使用一个ES6的类来定义一个组件</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Welcome</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Comoponent</span> </span>&#123;</div><div class="line">  render() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, &#123;this.props.name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上两个组件从React的角度等价</p>
+<p>类有一些额外特性我们将在接下来的部分讨论。到那时，我们将因其简明性而使用函数组件</p>
+<h4 id="渲染一个组件"><a href="#渲染一个组件" class="headerlink" title="渲染一个组件"></a>渲染一个组件</h4><p>先前，我们只遇到React元素呈现DOM标签：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = <span class="xml"><span class="tag">&lt;<span class="name">div</span> /&gt;</span>;</span></div></pre></td></tr></table></figure>
+<p>然而，元素也可以呈现用户定义的组件：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> element = <span class="xml"><span class="tag">&lt;<span class="name">Welcome</span> <span class="attr">name</span>=<span class="string">"Sara"</span> /&gt;</span>;</span></div></pre></td></tr></table></figure>
+<p>当React看到一个元素展现一个用户定义的组件时，它作为一个单独的对象传递JSX参数给这个组件。我们称这个对象为“props”</p>
+<p>比如，这个代码渲染“你好，Sara”在页面上：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Welcome</span>(<span class="params">props</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello, &#123;props.name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>参考链接：</p>
+<ul>
+<li><p><a href="https://reactjs.org/docs/" target="_blank" rel="external">https://reactjs.org/docs/</a></p>
+</li>
+<li><p><a href="https://codepen.io/pen?&editors=0010" target="_blank" rel="external">https://codepen.io/pen?&amp;editors=0010</a></p>
+</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/前端/">前端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/react/">react</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/02/01/js-zhi-shi-gong-gu/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JavaScript知识巩固</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2018/02/01/mysql-wu-shan-shu-ju-hui-fu/">
+                        <span class="hidden-mobile">mysql误删数据恢复</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "React教程之快速上手篇&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

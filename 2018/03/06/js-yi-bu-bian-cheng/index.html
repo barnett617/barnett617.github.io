@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>js异步编程 - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2018-03-06 19:10">
+                    2018年3月6日 晚上
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.1k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    13
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>js异步编程的<strong>4</strong>种方式</p>
+<a id="more"></a>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>js语言执行环境——单线程（Single Thread）</p>
+<h2 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h2><p>一次只能执行一个任务，超过一个的就只能<strong>排队</strong></p>
+<h3 id="单线程优势"><a href="#单线程优势" class="headerlink" title="单线程优势"></a>单线程优势</h3><ul>
+<li><p>实现简单</p>
+</li>
+<li><p>执行环境单纯</p>
+</li>
+</ul>
+<h3 id="单线程劣势"><a href="#单线程劣势" class="headerlink" title="单线程劣势"></a>单线程劣势</h3><p>存在<strong>耗时很长</strong>的任务会拖慢<strong>整个程序</strong>的运行</p>
+<h3 id="单线程带来的问题"><a href="#单线程带来的问题" class="headerlink" title="单线程带来的问题"></a>单线程带来的问题</h3><p>浏览器无响应（假死）</p>
+<h4 id="浏览器假死原因分析"><a href="#浏览器假死原因分析" class="headerlink" title="浏览器假死原因分析"></a>浏览器假死原因分析</h4><p>某段js代码（某个任务）长时间运行（比如死循环）</p>
+<h4 id="js对于单线程劣势的解决方案"><a href="#js对于单线程劣势的解决方案" class="headerlink" title="js对于单线程劣势的解决方案"></a>js对于单线程劣势的解决方案</h4><p>执行模式分为：同步（Synchronous）和异步（Asynchronus）</p>
+<h5 id="同步模式"><a href="#同步模式" class="headerlink" title="同步模式"></a>同步模式</h5><ul>
+<li><p>后一个任务等待前一个任务结束</p>
+</li>
+<li><p>程序执行顺序同任务排列顺序</p>
+</li>
+</ul>
+<h5 id="异步模式"><a href="#异步模式" class="headerlink" title="异步模式"></a>异步模式</h5><ul>
+<li><p>每个任务有1个或多个回调函数（callback）</p>
+</li>
+<li><p>前一个任务结束，不是继续执行后一个任务，而是执行回调</p>
+</li>
+<li><p>后一个任务不等前一个任务结束就执行</p>
+</li>
+<li><p>程序的执行顺序和任务排列顺序不一致</p>
+</li>
+</ul>
+<h4 id="异步模式使用"><a href="#异步模式使用" class="headerlink" title="异步模式使用"></a>异步模式使用</h4><p>浏览器端<strong>耗时长</strong>的任务都应该<strong>异步执行</strong></p>
+<p>避免浏览器失去效应</p>
+<h4 id="异步模式实践"><a href="#异步模式实践" class="headerlink" title="异步模式实践"></a>异步模式实践</h4><p>Ajax</p>
+<h2 id="异步编程的4种方式（实践）"><a href="#异步编程的4种方式（实践）" class="headerlink" title="异步编程的4种方式（实践）"></a>异步编程的4种方式（实践）</h2><h3 id="1-回调函数（最基本）"><a href="#1-回调函数（最基本）" class="headerlink" title="1.回调函数（最基本）"></a>1.回调函数（最基本）</h3><h4 id="实际场景"><a href="#实际场景" class="headerlink" title="实际场景"></a>实际场景</h4><p>两个函数f1()、f2()，f1()耗时长</p>
+<h5 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h5><p>把f2()函数写成f1()函数的回调函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params">callback</span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="comment">// code of f1</span></div><div class="line">		callback();</div><div class="line">	&#125;, <span class="number">1000</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">f1(f2);</div></pre></td></tr></table></figure>
+<ul>
+<li><p>f1不会阻塞程序执行</p>
+</li>
+<li><p>先执行程序主逻辑，耗时操作推迟执行</p>
+</li>
+</ul>
+<h6 id="回调函数存在的问题"><a href="#回调函数存在的问题" class="headerlink" title="回调函数存在的问题"></a>回调函数存在的问题</h6><ul>
+<li><p>不利于代码阅读和维护</p>
+</li>
+<li><p>各部分间耦合高（Coupling）</p>
+</li>
+<li><p>流程变乱</p>
+</li>
+<li><p>每个任务仅支持一个回调函数</p>
+</li>
+</ul>
+<h3 id="2-事件监听（信号）"><a href="#2-事件监听（信号）" class="headerlink" title="2.事件监听（信号）"></a>2.事件监听（信号）</h3><p>使用<strong>事件驱动</strong>模式——任务的执行不取决于代码顺序，而是事件的发生</p>
+<p>为f1绑定一个事件</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">f1.on(<span class="string">'done'</span>, f2);</div></pre></td></tr></table></figure>
+<p>解释：当f1发生done事件时执行f2</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		f1.trigger(<span class="string">'done'</span>);</div><div class="line">	&#125;, <span class="number">1000</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>f1.trigger(‘done’)表示当执行完其上的内容，立即触发done事件（即执行f2）</p>
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ul>
+<li><p>容易理解</p>
+</li>
+<li><p>每个事件可指定多个回调函数</p>
+</li>
+<li><p>可以去耦合（decoupling）</p>
+</li>
+<li><p>有利于实现模块化</p>
+</li>
+</ul>
+<h4 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h4><ul>
+<li><p>整个程序变成<strong>事件驱动</strong>的</p>
+</li>
+<li><p>运行流程不清晰</p>
+</li>
+</ul>
+<h3 id="3-发布-订阅模式-或-观察者模式（publish-subscribe-pattern-or-observer-pattern）"><a href="#3-发布-订阅模式-或-观察者模式（publish-subscribe-pattern-or-observer-pattern）" class="headerlink" title="3.发布/订阅模式 或 观察者模式（publish/subscribe pattern or observer pattern）"></a>3.发布/订阅模式 或 观察者模式（publish/subscribe pattern or observer pattern）</h3><p>制造一个信号中心，某任务完成后向信号中心<strong>发布（publish）</strong>一个信号，其他任务可向信号中心<strong>订阅（subscribe）</strong>这个信号，从而得知自己什么时候执行</p>
+<h4 id="该模式的多种实现"><a href="#该模式的多种实现" class="headerlink" title="该模式的多种实现"></a>该模式的多种实现</h4><ul>
+<li>Ben Alman’s gist <a href="https://gist.github.com/661855" target="_blank" rel="external">https://gist.github.com/661855</a> (recommended)</li>
+<li>Rick Waldron’s jQuery-core style take on the above <a href="https://gist.github.com/705311" target="_blank" rel="external">https://gist.github.com/705311</a></li>
+<li>Peter Higgins’ plugin (<a href="http://github.com/phiggins42/bloody-jquery-plugins/blob/master/pubsub.js" target="_blank" rel="external">http://github.com/phiggins42/bloody-jquery-plugins/blob/master/pubsub.js</a>).</li>
+<li>Ben Truyman’s gist <a href="https://gist.github.com/826794" target="_blank" rel="external">https://gist.github.com/826794</a></li>
+</ul>
+<p>参考：<a href="https://msdn.microsoft.com/en-us/magazine/hh201955.aspx" target="_blank" rel="external">https://msdn.microsoft.com/en-us/magazine/hh201955.aspx</a></p>
+<p>这里举例第一种，是jQuery的一个插件</p>
+<ol>
+<li>f2向jQuery（信号中心）订阅done信号</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">jQuery.subscribe(<span class="string">"done"</span>, f2);</div></pre></td></tr></table></figure>
+<ol>
+<li>f1向jQuery（信号中心）发布done信号</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			jQuery.publish(<span class="string">"done"</span>);</div><div class="line">	&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果f2只要执行一次，可以在执行后取消订阅</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">jQuery.unsubscribe(<span class="string">"done"</span>, f2);</div></pre></td></tr></table></figure>
+<h4 id="发布订阅模式优劣分析"><a href="#发布订阅模式优劣分析" class="headerlink" title="发布订阅模式优劣分析"></a>发布订阅模式优劣分析</h4><p>与事件监听类似，但可通过信号中心清晰了解到存在多少信号（发布者发布了多少信号）、每个信号有多少订阅者，从而监控程序的执行</p>
+<h3 id="4-Promises对象"><a href="#4-Promises对象" class="headerlink" title="4.Promises对象"></a>4.Promises对象</h3><p>Promises对象是CommonJS工作组提出的一种规范，目的旨在为<strong>异步编程</strong>提供统一的接口</p>
+<h4 id="Promises实现异步编程的思想"><a href="#Promises实现异步编程的思想" class="headerlink" title="Promises实现异步编程的思想"></a>Promises实现异步编程的思想</h4><ul>
+<li><p>每一个异步任务<strong>返回</strong>一个Promise对象</p>
+</li>
+<li><p>该对象有一个<strong>then</strong>方法，允许指定回调函数</p>
+</li>
+</ul>
+<h5 id="实例操作"><a href="#实例操作" class="headerlink" title="实例操作"></a>实例操作</h5><p>为f1指定回调函数为f2</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">f1().then(f2);</div></pre></td></tr></table></figure>
+<p>jQuery的实现</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> dfd = $.Deferred();</div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		dfd.resolve();</div><div class="line">	&#125;, <span class="number">1000</span>);</div><div class="line">	<span class="keyword">return</span> dfd.promise</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="优点分析"><a href="#优点分析" class="headerlink" title="优点分析"></a>优点分析</h5><ul>
+<li><p>回调函数变成了<strong>链式</strong>写法，程序流程清晰</p>
+</li>
+<li><p>有配套的<a href="http://api.jquery.com/category/deferred-object/" target="_blank" rel="external">整套方法</a>，可实现强大的功能</p>
+</li>
+</ul>
+<h5 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h5><h6 id="指定多个回调函数"><a href="#指定多个回调函数" class="headerlink" title="指定多个回调函数"></a>指定多个回调函数</h6><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">f1().then(f2).then(f3);</div></pre></td></tr></table></figure>
+<h6 id="指定发生错误时的回调函数"><a href="#指定发生错误时的回调函数" class="headerlink" title="指定发生错误时的回调函数"></a>指定发生错误时的回调函数</h6><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">f1().then(f2).fail(f3);</div></pre></td></tr></table></figure>
+<h5 id="Promises使用的优缺点"><a href="#Promises使用的优缺点" class="headerlink" title="Promises使用的优缺点"></a>Promises使用的优缺点</h5><h6 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h6><ul>
+<li><p>一个任务已完成，再添加回调函数，该回调函数会立刻执行</p>
+</li>
+<li><p>不用担心是否错过某个<strong>事件</strong>或<strong>信号</strong></p>
+</li>
+</ul>
+<h6 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h6><ul>
+<li>难以理解和编写</li>
+</ul>
+<p>参考链接：</p>
+<ul>
+<li><a href="http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html</a></li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/前端/">前端</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/javascript/">javascript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2018/09/03/javascript-gao-ji-cheng-xu-she-ji-di-3-ban-bi-ji-yi-1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JavaScript高级程序设计第3版笔记（一）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2018/02/25/ji-yi-ci-guan-yu-yun-xing-redux-shi-li-qi-dong-cuo-wu-de-fen-xi/">
+                        <span class="hidden-mobile">记一次关于运行redux示例启动错误的分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "js异步编程&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

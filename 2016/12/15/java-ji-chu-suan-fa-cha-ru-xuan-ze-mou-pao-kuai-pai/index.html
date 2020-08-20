@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/avatar.jpg">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="To Know What and To Know Why">
+  <meta name="author" content="h2mes">
+  <meta name="keywords" content="">
+  <title>Java基础算法（插入、选择、冒泡、快排） - MikeWang</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王艺谋的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2016-12-15 23:20">
+                    2016年12月15日 晚上
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    927 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    12
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h3 id="一、直接插入排序"><a href="#一、直接插入排序" class="headerlink" title="一、直接插入排序"></a>一、直接插入排序</h3><h4 id="1、原理：从待排序的数中选出一个来，插入到前面的合适位置。"><a href="#1、原理：从待排序的数中选出一个来，插入到前面的合适位置。" class="headerlink" title="1、原理：从待排序的数中选出一个来，插入到前面的合适位置。"></a>1、原理：从待排序的数中选出一个来，插入到前面的合适位置。</h4><h4 id="2、适用场景：基本有序的数据"><a href="#2、适用场景：基本有序的数据" class="headerlink" title="2、适用场景：基本有序的数据"></a>2、适用场景：基本有序的数据</h4><h4 id="3、代码实现："><a href="#3、代码实现：" class="headerlink" title="3、代码实现："></a>3、代码实现：</h4><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> data[] = &#123;<span class="number">12</span>, <span class="number">6</span>, <span class="number">17</span>, <span class="number">108</span>, <span class="number">97</span>, <span class="number">93</span>, <span class="number">256</span>, <span class="number">1024</span>&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertSort</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> tmp, i = <span class="number">0</span>;</div><div class="line">	<span class="comment">// 遍历数组</span></div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;data.length; j++) &#123;</div><div class="line">		<span class="comment">// 依次取出每个数放入tmp</span></div><div class="line">		tmp = data[j];</div><div class="line">		<span class="comment">// 将取出的数与之前面一个比较</span></div><div class="line">		i = j - <span class="number">1</span>;</div><div class="line">		<span class="comment">// 若小于前面一个数，则将前面一个数后移（覆盖取出来的这个数的位置）</span></div><div class="line">		<span class="keyword">while</span>(i &gt;= <span class="number">0</span> &amp;&amp; tmp &lt; data[i]) &#123;</div><div class="line">			data[i+<span class="number">1</span>] = data[i];</div><div class="line">			<span class="comment">// 继续和再前面一个数比较</span></div><div class="line">			i--;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">// 将取出的数插入</span></div><div class="line">		data[i+<span class="number">1</span>] = tmp;</div><div class="line">		System.out.println();</div><div class="line">		print();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="二、选择排序"><a href="#二、选择排序" class="headerlink" title="二、选择排序"></a>二、选择排序</h3><h4 id="1、原理：与直接插入排序正好相反，选择排序是从待排序的数中选出最小的放在已经排好的后面，这个算法选数耗时"><a href="#1、原理：与直接插入排序正好相反，选择排序是从待排序的数中选出最小的放在已经排好的后面，这个算法选数耗时" class="headerlink" title="1、原理：与直接插入排序正好相反，选择排序是从待排序的数中选出最小的放在已经排好的后面，这个算法选数耗时"></a>1、原理：与直接插入排序正好相反，选择排序是从待排序的数中选出<strong>最小</strong>的放在已经排好的<strong>后面</strong>，这个算法<strong>选数耗时</strong></h4><h4 id="2、代码实现："><a href="#2、代码实现：" class="headerlink" title="2、代码实现："></a>2、代码实现：</h4><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> data[] = &#123;<span class="number">12</span>, <span class="number">6</span>, <span class="number">17</span>, <span class="number">108</span>, <span class="number">97</span>, <span class="number">93</span>, <span class="number">256</span>, <span class="number">1024</span>&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">selectSort</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">// i, j, k未初始化</span></div><div class="line">	<span class="keyword">int</span> i, j, k, tmp = <span class="number">0</span>;</div><div class="line">	<span class="comment">// 遍历数组，从i开始的length-1个数</span></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;data.length-<span class="number">1</span>; i++) &#123;</div><div class="line">		<span class="comment">// 设置k的值和i一致</span></div><div class="line">		k = i;</div><div class="line">		<span class="comment">// 遍历数组，从i+1开始的length-1个数</span></div><div class="line">		<span class="keyword">for</span>(j=i+<span class="number">1</span>; j&lt;data.length; j++) &#123;</div><div class="line">			<span class="comment">// 如果后一个数比前面一个数小</span></div><div class="line">			<span class="keyword">if</span>(data[j] &lt; data[k]) &#123;</div><div class="line">				<span class="comment">// 则把后一个数的坐标赋予k（保持k坐标的数为当前轮最小数）</span></div><div class="line">				k = j;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">// 若发生后一个数比前一个数小的情况，则交换</span></div><div class="line">		<span class="keyword">if</span>(k != i) &#123;</div><div class="line">			<span class="comment">// 交换</span></div><div class="line">			tmp = data[i];</div><div class="line">			data[i] = data[k];</div><div class="line">			data[k] = tmp;</div><div class="line">			System.out.println();</div><div class="line">			print();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="三、冒泡排序"><a href="#三、冒泡排序" class="headerlink" title="三、冒泡排序"></a>三、冒泡排序</h3><h4 id="1、原理：小的数一点一点向前起泡，最终有序。"><a href="#1、原理：小的数一点一点向前起泡，最终有序。" class="headerlink" title="1、原理：小的数一点一点向前起泡，最终有序。"></a>1、原理：小的数一点一点向前起泡，最终有序。</h4><h4 id="2、代码实现：-1"><a href="#2、代码实现：-1" class="headerlink" title="2、代码实现："></a>2、代码实现：</h4><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> data[] = &#123;<span class="number">12</span>, <span class="number">6</span>, <span class="number">17</span>, <span class="number">108</span>, <span class="number">97</span>, <span class="number">93</span>, <span class="number">256</span>, <span class="number">1024</span>&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> i, j, tmp = <span class="number">0</span>;</div><div class="line">	<span class="comment">// 遍历从i开始的length-1个数</span></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;data.length - <span class="number">1</span>; i++) &#123;</div><div class="line">		<span class="comment">// 依次比较相邻两个数</span></div><div class="line">		<span class="keyword">for</span>(j=data.length - <span class="number">1</span>; j&gt;i; i--) &#123;</div><div class="line">			<span class="comment">// 若后者小于前者，则换位</span></div><div class="line">			<span class="keyword">if</span>(data[j] &lt; data[j-<span class="number">1</span>]) &#123;</div><div class="line">				tmp = data[j];</div><div class="line">				data[j] = data[j-<span class="number">1</span>];</div><div class="line">				data[j-<span class="number">1</span>] = tmp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="四、快速排序"><a href="#四、快速排序" class="headerlink" title="四、快速排序"></a>四、快速排序</h3><h4 id="1、原理：设置两个指针：i和j，分别指向第一个和最后一个，i像后移动，j向前移动，选第一个数为标准（一般这样做，当然快排的关键就是这个“标准”的选取），从后面开始，找到第一个比标准小的数，互换位置，然后再从前面，找到第一个比标准大的数，互换位置，第一趟的结果就是标准左边的都小于标准，右边的都大于标准（但不一定有序），分成两拨后，继续递归的使用上述方法，最终有序！"><a href="#1、原理：设置两个指针：i和j，分别指向第一个和最后一个，i像后移动，j向前移动，选第一个数为标准（一般这样做，当然快排的关键就是这个“标准”的选取），从后面开始，找到第一个比标准小的数，互换位置，然后再从前面，找到第一个比标准大的数，互换位置，第一趟的结果就是标准左边的都小于标准，右边的都大于标准（但不一定有序），分成两拨后，继续递归的使用上述方法，最终有序！" class="headerlink" title="1、原理：设置两个指针：i和j，分别指向第一个和最后一个，i像后移动，j向前移动，选第一个数为标准（一般这样做，当然快排的关键就是这个“标准”的选取），从后面开始，找到第一个比标准小的数，互换位置，然后再从前面，找到第一个比标准大的数，互换位置，第一趟的结果就是标准左边的都小于标准，右边的都大于标准（但不一定有序），分成两拨后，继续递归的使用上述方法，最终有序！"></a>1、原理：设置两个指针：i和j，分别指向第一个和最后一个，i像后移动，j向前移动，选第一个数为标准（一般这样做，当然快排的关键就是这个“标准”的选取），从后面开始，找到第一个比标准小的数，互换位置，然后再从前面，找到第一个比标准大的数，互换位置，第一趟的结果就是标准左边的都小于标准，右边的都大于标准（但不一定有序），分成两拨后，继续递归的使用上述方法，最终有序！</h4><h4 id="2、适用场景：基本无序的数据"><a href="#2、适用场景：基本无序的数据" class="headerlink" title="2、适用场景：基本无序的数据"></a>2、适用场景：基本<strong>无序</strong>的数据</h4><h4 id="3、代码实现：-1"><a href="#3、代码实现：-1" class="headerlink" title="3、代码实现："></a>3、代码实现：</h4><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span> data[], <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> i, j;</div><div class="line">	i = start;</div><div class="line">	j = end;</div><div class="line">	<span class="keyword">if</span>((data == <span class="keyword">null</span>) || (data.length == <span class="number">0</span>)) &#123;</div><div class="line">		<span class="keyword">return</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">while</span>(i &lt; j) &#123;</div><div class="line">		<span class="comment">// 以start下标的数据为key，从右向左依次扫描</span></div><div class="line">		<span class="keyword">while</span>(i &lt; j &amp;&amp; data[i] &lt;= data[j]) &#123;</div><div class="line">			j--;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">// 找出第一个比key小的，交换位置</span></div><div class="line">		<span class="keyword">if</span>(i &lt; j) &#123;</div><div class="line">			<span class="keyword">int</span> temp = data[i];</div><div class="line">			data[i] = data[j];</div><div class="line">			data[j] = temp;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">while</span>(i &lt; j &amp;&amp; data[i] &lt; data[j]) &#123;</div><div class="line">			<span class="comment">// 左侧扫描（此时a[j]存着key的值）</span></div><div class="line">			i++;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">// 找出第一个比key大的，交换位置</span></div><div class="line">		<span class="keyword">if</span>(i &lt; j) &#123;</div><div class="line">			<span class="keyword">int</span> temp = data[i];</div><div class="line">			data[i] = data[j];</div><div class="line">			data[j] = temp;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">// 递归调用，把key前面的完成排序</span></div><div class="line">	<span class="keyword">if</span>(i-start &gt; <span class="number">1</span>) &#123;</div><div class="line">		quickSort(data, <span class="number">0</span>, i-<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">// 递归调用，把key后面的完成排序</span></div><div class="line">	<span class="keyword">if</span>(end-j &gt; <span class="number">1</span>) &#123;</div><div class="line">		quickSort(data, j+<span class="number">1</span>, end);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/算法/">算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/java/">java</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" rel="nofollow noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2017/02/06/windows-shan-chu-zhao-bu-dao-gai-xiang-mu-de-wen-jian/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">windows删除“找不到该项目”的文件</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2016/12/15/ke-fu-yong-mian-xiang-dui-xiang-ruan-jian-ji-chu-she-ji-mo-shi-liu-zhi-yuan-xing-mo-shi/">
+                        <span class="hidden-mobile">可复用面向对象软件基础——设计模式（六）之原型模式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="barnett617/blog-comment"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- autoload -->
+<script  src="/js/autoload.js" ></script>
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Java基础算法（插入、选择、冒泡、快排）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
